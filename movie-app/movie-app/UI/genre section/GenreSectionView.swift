@@ -1,0 +1,67 @@
+//
+//  ContentView.swift
+//  movie-app
+//
+//  Created by Panna Krisztina Pazonyi on 2025. 04. 06..
+//
+
+import SwiftUI
+
+class GenreSectionViewModel: ObservableObject {
+    @Published var genres: [Genre] = []
+    
+    func loadGenre() {
+        self.genres = [
+            Genre(id: 1, name: "Adventure"),
+            Genre(id: 2, name: "Sci-fi"),
+            Genre(id: 3, name: "Fantasy"),
+            Genre(id: 4, name: "Comedy")
+        ]
+    }
+}
+
+struct GenreSectionView: View {
+    
+    @StateObject private var viewModel  = GenreSectionViewModel()
+    
+    var body: some View {
+        NavigationView {
+            ZStack {
+                VStack {
+                    HStack{
+                        Spacer()
+                        Image(.redCirclePart)
+                    }
+                    Spacer()
+                }.ignoresSafeArea()
+                List(viewModel.genres) {genre in
+                    ZStack {
+                        NavigationLink(destination: Color.gray) {
+                            EmptyView()
+                        }.opacity(0)
+
+                    HStack {
+                        Text(genre.name).font(Fonts.title)
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Image(.rightArrow)
+                        }
+                                        
+                    }
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                    }
+                .listStyle(.plain)
+                .navigationTitle("genreSection.title")
+            }
+            .onAppear {
+                viewModel.loadGenre()
+            }
+            }
+            
+            }
+}
+
+#Preview {
+    GenreSectionView()
+}
