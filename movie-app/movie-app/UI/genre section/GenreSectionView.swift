@@ -6,10 +6,16 @@
 //
 
 import SwiftUI
+import InjectPropertyWrapper
 
-class GenreSectionViewModel: ObservableObject {
+protocol GenreSectionViewModelProtocol: ObservableObject {
+    
+}
+
+class GenreSectionViewModel: GenreSectionViewModelProtocol {
     @Published var genres: [Genre] = []
-    private var movieService: MovieService = MovieService()
+    @Inject
+    private var movieService: MovieServiceProtocol
     
     func fetchGenres() async {
         do {
@@ -68,7 +74,7 @@ struct GenreSectionView: View {
                 }.ignoresSafeArea()
                 List(viewModel.genres) {genre in
                     ZStack {
-                        NavigationLink(destination: Color.gray) {
+                        NavigationLink(destination: MovieListView(genre: genre)) {
                             EmptyView()
                         }.opacity(0)
 
