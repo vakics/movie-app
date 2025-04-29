@@ -6,3 +6,9 @@
   
 */
 "genreList.title" = "Filmek alkalmazás";
+"search.textfield.placeholder" = "Movies, Director, ";
+"search.empty.title" = "Kezdj el gépelni a kereséshez!";
+"error.unexpected.title" = "Hiba";
+"error.unexpected.desc" = "A kérés nem sikerült. Kérlek próbáld újra!";
+"error.close" = "Bezárás";
+"error.api.title" = "API hiba";

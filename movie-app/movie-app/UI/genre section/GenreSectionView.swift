@@ -8,12 +8,17 @@
 import SwiftUI
 import InjectPropertyWrapper
 
+protocol ErrorViewModelProtocol{
+    var alerModel : AlertModel { get }
+}
+
 protocol GenreSectionViewModelProtocol: ObservableObject {
     
 }
 
 class GenreSectionViewModel: GenreSectionViewModelProtocol {
     @Published var genres: [Genre] = []
+    @Published var alertModel: AlertModel? = nil
     @Inject
     private var movieService: MovieServiceProtocol
     
@@ -24,6 +29,8 @@ class GenreSectionViewModel: GenreSectionViewModelProtocol {
             DispatchQueue.main.async {
                 self.genres = genres
             }
+        } catch let error as MovieError{
+            print(error.localizedDescription)
         } catch {
             print("Error fetching genres")
         }
@@ -42,7 +49,12 @@ class GenreSectionViewModel: GenreSectionViewModelProtocol {
             DispatchQueue.main.async {
                 self.genres = genres
             }
-        } catch {
+        } catch let error as MovieError {
+            DispatchQueue.main.async {
+                self.alertModel = self.toAlertModel(error)
+            }
+        }
+        catch {
             print("Error fetching Tv genres")
         }
     }
@@ -54,6 +66,20 @@ class GenreSectionViewModel: GenreSectionViewModelProtocol {
             return await fetchGenres()
         case .tvShow:
             return await fetchTVGenres()
+        }
+    }
+    
+    private func toAlertModel(_ error: MovieError)->AlertModel{
+        guard let error = error as? MovieError else {
+            return AlertModel(title: "error.unexpected.title", message: "error.unexpected.desc", dismissButtonTitle: "error.close")
+        }
+        switch error{
+        case .invalidApiKeyError(let message):
+            return AlertModel(title: "error.api.title", message: message, dismissButtonTitle: "error.close")
+        case .clientError:
+            return AlertModel(title: "Client error", message: error.localizedDescription, dismissButtonTitle: "error.close")
+        default:
+            return AlertModel(title: "error.unexpected.title", message: "error.unexpected.desc", dismissButtonTitle: "error.close")
         }
     }
 }
@@ -78,19 +104,15 @@ struct GenreSectionView: View {
                             EmptyView()
                         }.opacity(0)
 
-                    HStack {
-                        Text(genre.name).font(Fonts.title)
-                            .foregroundStyle(.primary)
-                        Spacer()
-                        Image(.rightArrow)
-                        }
+                        GenreSectionCell(genre: genre)
                                         
                     }
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
                     }
+                .accessibilityLabel("testCollectionView")
                 .listStyle(.plain)
-                .navigationTitle(Environment.name == .dev ? "DEV" : "PROD")
+                .navigationTitle(type == .movie ? "Movie" : "Tv Show")
             }
             .onAppear {
 //                a task felel a háttérben futó hívásokért
@@ -98,6 +120,10 @@ struct GenreSectionView: View {
                     await viewModel.load(type: type)
                 }
             }
+            .alert(item: $viewModel.alertModel) { model in
+                Alert(title: Text(LocalizedStringKey(model.title)), message: Text(LocalizedStringKey(model.message)), dismissButton: .default(Text(LocalizedStringKey(model.dismissButtonTitle))){
+                    viewModel.alertModel = nil
+                })}
         }
     }
 }
