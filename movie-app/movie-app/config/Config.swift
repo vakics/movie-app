@@ -19,5 +19,6 @@ enum Config {
     
     static var bearerToken: String {
         "Bearer \(apiToken)"
+        
     }
 }

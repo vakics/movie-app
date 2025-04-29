@@ -6,3 +6,9 @@
   
 */
 "genreSection.title" = "Movie app";
+"search.textfield.placeholder" = "Movies, Director, ";
+"search.empty.title" = "Kezdj el gépelni a kereséshez!";
+"error.unexpected.title" = "Unexpected error";
+"error.unexpected.desc" = "Something went wrong. Please try again!";
+"error.close" = "Close";
+"error.api.title" = "API error";
