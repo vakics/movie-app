@@ -5,6 +5,7 @@
   Created by Panna Krisztina Pazonyi on 2025. 04. 08..
   
 */
+"mainTab.title" = "Search for";
 "genreSection.title" = "Movie app";
 "search.textfield.placeholder" = "Movies, Director, ";
 "search.empty.title" = "Kezdj el gépelni a kereséshez!";
@@ -12,3 +13,4 @@
 "error.unexpected.desc" = "Something went wrong. Please try again!";
 "error.close" = "Close";
 "error.api.title" = "API error";
+"favoriteMovies.title" = "Favorites";

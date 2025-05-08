@@ -12,7 +12,9 @@ enum MoviesApi {
     case fetchGenres(req: FetchGenreRequest)
     case fetchTVGenres(req: FetchGenreRequest)
     case fetchMovies(req: FetchMoviesRequest)
+    case fetchTVShows(req: FetchMoviesRequest)
     case searchMovies(req: SearchMoviesRequest)
+    case fetchFavoriteMovies(req: FetchFavoriteMovieRequest)
 }
 
 extension MoviesApi: TargetType {
@@ -32,14 +34,18 @@ extension MoviesApi: TargetType {
             return "genre/tv/list"
         case .fetchMovies:
             return "discover/movie"
+        case .fetchTVShows:
+            return "discover/tv"
         case .searchMovies:
             return "search/movie"
+        case let .fetchFavoriteMovies(req):
+            return "account/\(req.accountId)/favorite/movies"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .fetchGenres, .fetchTVGenres, .fetchMovies, .searchMovies:
+        case .fetchGenres, .fetchTVGenres, .fetchMovies, .searchMovies, .fetchTVShows, .fetchFavoriteMovies:
             return .get
         }
     }
@@ -53,7 +59,11 @@ extension MoviesApi: TargetType {
             return .requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
         case let .fetchMovies(req):
             return.requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
+        case let .fetchTVShows(req):
+            return.requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
         case let .searchMovies(req):
+            return.requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
+        case let .fetchFavoriteMovies(req):
             return.requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
         }
     }
@@ -66,7 +76,11 @@ extension MoviesApi: TargetType {
             return ["Authorization": req.accessToken]
         case let .fetchMovies(req):
             return ["Authorization": req.accessToken]
+        case let .fetchTVShows(req):
+            return ["Authorization": req.accessToken]
         case let .searchMovies(req):
+            return ["Authorization": req.accessToken]
+        case let .fetchFavoriteMovies(req):
             return ["Authorization": req.accessToken]
         }
     }

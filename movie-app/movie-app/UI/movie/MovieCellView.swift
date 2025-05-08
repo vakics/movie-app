@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MovieCellView: View {
-    let movie: Movie
+    let movie: MediaItem
     
     var body: some View {
         VStack(alignment: .leading, spacing: LayoutConst.smallPadding) {

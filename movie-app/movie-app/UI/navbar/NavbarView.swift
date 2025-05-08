@@ -46,6 +46,11 @@ struct NavbarView: View {
                     .background(Color.tabBarBackground)
                     .ignoresSafeArea()
                 
+                FavoriteView()
+                    .tag(TabType.favorites)
+                    .background(Color.tabBarBackground)
+                    .ignoresSafeArea()
+                
             }
             .background(.clear)
             .padding(.bottom, LayoutConst.largePadding)

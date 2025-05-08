@@ -38,7 +38,7 @@ struct MainTab: View {
                 }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
-            }.navigationTitle("Search for")
+            }.navigationTitle("mainTab.title")
         }
     }
 }
