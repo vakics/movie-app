@@ -24,8 +24,10 @@ struct MovieAPIErrorResponse: Decodable {
 protocol MovieServiceProtocol {
     func fetchGenres(req: FetchGenreRequest) async throws -> [Genre]
     func fetchTVGenres(req: FetchGenreRequest) async throws -> [Genre]
-    func fetchMovies(req: FetchMoviesRequest) async throws -> [Movie]
-    func searchMovies(req: SearchMoviesRequest) async throws -> [Movie]
+    func fetchMovies(req: FetchMoviesRequest) async throws -> [MediaItem]
+    func searchMovies(req: SearchMoviesRequest) async throws -> [MediaItem]
+    func fetchTVShows(req: FetchMoviesRequest) async throws -> [MediaItem]
+    func fetchFavoriteMovies(req: FetchFavoriteMovieRequest) async throws -> [MediaItem]
 }
 
 class MovieService: MovieServiceProtocol {
@@ -49,22 +51,36 @@ class MovieService: MovieServiceProtocol {
         )
     }
     
-    func fetchMovies(req: FetchMoviesRequest) async throws -> [Movie] {
+    func fetchMovies(req: FetchMoviesRequest) async throws -> [MediaItem] {
         try await requestAndTransform(
             target: MultiTarget(MoviesApi.fetchMovies(req: req)),
             decodeTo: MoviePageResponse.self,
-            transform: { $0.results.map(Movie.init(dto:)) }
+            transform: { $0.results.map(MediaItem.init(dto:)) }
         )
     }
     
-    func searchMovies(req: SearchMoviesRequest) async throws -> [Movie] {
+    func searchMovies(req: SearchMoviesRequest) async throws -> [MediaItem] {
         try await requestAndTransform(
             target: MultiTarget(MoviesApi.searchMovies(req: req)),
             decodeTo: MoviePageResponse.self,
             transform: { (moviePageResponse: MoviePageResponse) in
-                moviePageResponse.results.map(Movie.init(dto:))
+                moviePageResponse.results.map(MediaItem.init(dto:))
             }
         )
+    }
+    
+    func fetchFavoriteMovies(req: FetchFavoriteMovieRequest) async throws -> [MediaItem] {
+        try await requestAndTransform(
+            target: MultiTarget(MoviesApi.fetchFavoriteMovies(req: req)),
+            decodeTo: MoviePageResponse.self,
+            transform: { (moviePageResponse: MoviePageResponse) in
+                moviePageResponse.results.map(MediaItem.init(dto:))
+            }
+        )
+    }
+    
+    func fetchTVShows(req: FetchMoviesRequest) async throws -> [MediaItem] {
+        try await requestAndTransform(target: MultiTarget(MoviesApi.fetchTVShows(req: req)), decodeTo: TVPageResponse.self, transform: {$0.results.map(MediaItem.init(dto:))})
     }
     
     private func requestAndTransform<ResponseType: Decodable, Output>(
@@ -73,7 +89,8 @@ class MovieService: MovieServiceProtocol {
         transform: @escaping (ResponseType) -> Output
     ) async throws -> Output {
         try await withCheckedThrowingContinuation { continuation in
-            moya.request(target) { result in
+            moya.request(target) { [weak self]result in
+                guard let self = self else {return}
                 switch result {
                 case .success(let response):
                     // Státuszkód ellenőrzése

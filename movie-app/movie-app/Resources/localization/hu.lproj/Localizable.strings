@@ -5,10 +5,12 @@
   Created by Panna Krisztina Pazonyi on 2025. 04. 08..
   
 */
+"mainTab.title" = "Szűrés";
 "genreList.title" = "Filmek alkalmazás";
-"search.textfield.placeholder" = "Movies, Director, ";
+"search.textfield.placeholder" = "Filmek, rendező, ";
 "search.empty.title" = "Kezdj el gépelni a kereséshez!";
 "error.unexpected.title" = "Hiba";
 "error.unexpected.desc" = "A kérés nem sikerült. Kérlek próbáld újra!";
 "error.close" = "Bezárás";
 "error.api.title" = "API hiba";
+"favoriteMovies.title" = "Kedvencek";
