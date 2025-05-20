@@ -14,3 +14,13 @@
 "error.close" = "Bezárás";
 "error.api.title" = "API hiba";
 "favoriteMovies.title" = "Kedvencek";
+"available" = "Elérhető";
+"unavailable" = "Nem elérhető";
+"detail.releaseDate" = "Kiadás";
+"detail.runtime" = "Hossz";
+"detail.language" = "Nyelvek";
+"detail.rate.button" = "Értékeld";
+"detail.imdb.button" = "Nézd meg IMDB-n";
+"detail.overview" = "Összefoglaló";
+"detail.publishers" = "Kiadók és cégek";
+"detail.cast" = "Színészek";

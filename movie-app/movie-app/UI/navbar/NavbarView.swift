@@ -46,7 +46,7 @@ struct NavbarView: View {
                     .background(Color.tabBarBackground)
                     .ignoresSafeArea()
                 
-                FavoriteView()
+                FavoritesView()
                     .tag(TabType.favorites)
                     .background(Color.tabBarBackground)
                     .ignoresSafeArea()
