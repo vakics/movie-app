@@ -6,16 +6,21 @@
 //
 
 import SwiftUI
+import InjectPropertyWrapper
 
-struct FavoriteView: View {
+struct FavoritesView: View {
     @StateObject private var viewModel = FavoriteViewModell()
+    
     var body: some View {
-        NavigationView{
+        NavigationView {
             ScrollView {
-                VStack(spacing: 16) {
-                    ForEach(viewModel.movies) { movie in
-                        MovieCellView(movie: movie)
-                            .frame(height: 277)
+                LazyVStack(spacing: LayoutConst.normalPadding) {
+                    ForEach(viewModel.mediaItems) { movie in
+                        NavigationLink(destination: DetailView(mediaItem: movie)) {
+                            MovieCellView(movie: movie)
+                                .frame(height: 277)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding(.horizontal, LayoutConst.normalPadding)
@@ -23,9 +28,12 @@ struct FavoriteView: View {
             }
             .navigationTitle("favoriteMovies.title")
         }
+        .showAlert(model: $viewModel.alertModel)
+        .onAppear {
+            viewModel.viewLoaded.send(())
+        }
     }
 }
-
 #Preview {
-    FavoriteView()
+    FavoritesView()
 }

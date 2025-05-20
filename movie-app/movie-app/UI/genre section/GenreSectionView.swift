@@ -42,10 +42,7 @@ struct GenreSectionView: View {
                 viewModel.typeSubject.send(type)
                 
             }
-            .alert(item: $viewModel.alertModel) { model in
-                Alert(title: Text(LocalizedStringKey(model.title)), message: Text(LocalizedStringKey(model.message)), dismissButton: .default(Text(LocalizedStringKey(model.dismissButtonTitle))){
-                    viewModel.alertModel = nil
-                })}
+            .showAlert(model: $viewModel.alertModel)
         }
     }
 }

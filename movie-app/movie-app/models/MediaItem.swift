@@ -67,7 +67,16 @@ struct MediaItem: Identifiable {
         self.imageUrl = imageUrl
         self.rating = dto.voteAverage
         self.voteCount = dto.voteCount
-        
+    }
+    
+    init(mediaItemDetail: MediaItemDetail) {
+        self.id = mediaItemDetail.id
+        self.title = mediaItemDetail.title
+        self.year = mediaItemDetail.year
+        self.duration = "\(mediaItemDetail.runtime)"
+        self.imageUrl = mediaItemDetail.imageUrl
+        self.rating = mediaItemDetail.rating
+        self.voteCount = mediaItemDetail.voteCount
     }
     
 }

@@ -6,11 +6,11 @@
 //
 
 protocol ErrorPrentable {
-    func toAlertModel(_ error: Error) -> AlertModel
+    func toAlertModel(_ error: Error) -> AlertModel?
 }
 
 extension ErrorPrentable {
-    func toAlertModel(_ error: Error)->AlertModel{
+    func toAlertModel(_ error: Error)->AlertModel?{
         guard let error = error as? MovieError else {
             return AlertModel(title: "error.unexpected.title", message: "error.unexpected.desc", dismissButtonTitle: "error.close")
         }
@@ -19,6 +19,8 @@ extension ErrorPrentable {
             return AlertModel(title: "error.api.title", message: message, dismissButtonTitle: "error.close")
         case .clientError:
             return AlertModel(title: "Client error", message: error.localizedDescription, dismissButtonTitle: "error.close")
+        case .noInternetError:
+            return nil
         default:
             return AlertModel(title: "error.unexpected.title", message: "error.unexpected.desc", dismissButtonTitle: "error.close")
         }

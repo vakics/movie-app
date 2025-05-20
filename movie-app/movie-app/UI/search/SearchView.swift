@@ -11,8 +11,6 @@ import Combine
 
 struct SearchView: View {
     @StateObject private var viewModel = SearchViewModel()
-    let debouncer = Debouncer(interval: 1.0)
-    let throttler = Throttler(interval: 1.0)
     var body: some View {
         NavigationView {
             VStack {

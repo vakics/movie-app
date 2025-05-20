@@ -10,29 +10,28 @@ import Combine
 import InjectPropertyWrapper
 
 protocol FavoriteViewModellProtocol: ObservableObject{
-    var movies: [MediaItem] {get}
+    var mediaItems: [MediaItem] {get}
 }
 
 class FavoriteViewModell: FavoriteViewModellProtocol, ErrorPrentable{
+    @Published var mediaItems: [MediaItem] = []
     @Published var alertModel: AlertModel? = nil
-    @Published var movies: [MediaItem] = []
+    
     private var cancellables = Set<AnyCancellable>()
+    
+    let viewLoaded = PassthroughSubject<Void, Never>()
+    
     @Inject
-    private var movieService: MovieServiceProtocol
+    private var service: ReactiveMoviesServiceProtocol
+    
     init() {
-        let request = FetchFavoriteMovieRequest()
-        let future = Future<[MediaItem], Error> { promise in
-            Task {
-                do {
-                    let movies = try await self.movieService.fetchFavoriteMovies(req: request)
-                    promise(.success(movies))
-                } catch {
-                    promise(.failure(error))
+        viewLoaded
+            .flatMap { [weak self]_ -> AnyPublisher<[MediaItem], MovieError> in
+                guard let self = self else {
+                    preconditionFailure("There is no self")
                 }
+                return self.service.fetchFavoriteMovies(req: FetchFavoriteMovieRequest(), fromLocal: true)
             }
-        }
-        
-        future
             .receive(on: RunLoop.main)
             .sink { completion in
                 switch completion {
@@ -41,10 +40,9 @@ class FavoriteViewModell: FavoriteViewModellProtocol, ErrorPrentable{
                 case .finished:
                     break
                 }
-            } receiveValue: { [weak self] movies in
-                self?.movies = movies
+            } receiveValue: { [weak self]mediaItems in
+                self?.mediaItems = mediaItems
             }
             .store(in: &cancellables)
     }
-    
 }

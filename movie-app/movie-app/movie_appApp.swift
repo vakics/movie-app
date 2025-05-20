@@ -13,7 +13,7 @@ struct movie_appApp: App {
     @State var selectedTab: TabType = TabType.genre
     var body: some Scene {
         WindowGroup {
-            NavbarView(selectedTab: $selectedTab)
+            RootView(selectedTab: selectedTab)
         }
     }
 }

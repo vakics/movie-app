@@ -14,30 +14,7 @@ struct MovieCellView: View {
         VStack(alignment: .leading, spacing: LayoutConst.smallPadding) {
             ZStack(alignment: .topLeading) {
                 HStack(alignment: .center) {
-                    AsyncImage(url: movie.imageUrl) { phase in
-                        switch phase {
-                        case .empty:
-                            ZStack {
-                                Color.gray.opacity(0.3)
-                                ProgressView()
-                            }
-
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFill()
-
-                        case .failure:
-                            ZStack {
-                                Color.red.opacity(0.3)
-                                Image(systemName: "photo")
-                                    .foregroundColor(.white)
-                            }
-
-                        default:
-                            EmptyView()
-                        }
-                    }
+                    LoadImageView(url: movie.imageUrl) 
                     .frame(height: 150)
                     .frame(maxWidth: .infinity)
                     .clipped()

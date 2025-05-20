@@ -14,3 +14,13 @@
 "error.close" = "Close";
 "error.api.title" = "API error";
 "favoriteMovies.title" = "Favorites";
+"available" = "Available";
+"unavailable" = "Unavailable";
+"detail.releaseDate" = "Release date";
+"detail.runtime" = "Runtime";
+"detail.language" = "Language";
+"detail.rate.button" = "Rate this movie";
+"detail.imdb.button" = "Visit at IMDB";
+"detail.overview" = "Synopsis";
+"detail.publishers" = "Publishers and companies";
+"detail.cast" = "Cast";
