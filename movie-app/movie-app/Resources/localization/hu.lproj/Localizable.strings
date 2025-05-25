@@ -24,3 +24,9 @@
 "detail.overview" = "Összefoglaló";
 "detail.publishers" = "Kiadók és cégek";
 "detail.cast" = "Színészek";
+"noInternet" = "Nincs internet";
+"addReview.subTitle" = "Hány csillagra értékelnéd?";
+"addReview.buttonTitle" = "Küldd el az értékelésem";
+"navbar.settings" = "Beállítások";
+"setting.language" = "Válassz nyelvet";
+"setting.mode" = "Válaszd a világos vagy sötét oldalt";

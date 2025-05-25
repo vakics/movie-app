@@ -9,16 +9,19 @@ import Foundation
 import Reachability
 import Combine
 
-protocol NetworkMonitorProtocol{
-    var isConnected: AnyPublisher<Bool, Never> {get}
+protocol NetworkMonitorProtocol {
+    var isConnected: AnyPublisher<Bool, Never> { get }
 }
 
 class NetworkMonitor: NetworkMonitorProtocol {
-    private let subject = PassthroughSubject<Bool, Never>()
-    private var reachability: Reachability
+    
     var isConnected: AnyPublisher<Bool, Never> {
-        subject.eraseToAnyPublisher()
+        isConnectedSubject.eraseToAnyPublisher()
     }
+    
+    private var reachability: Reachability
+    //private let isConnectedSubject = PassthroughSubject<Bool, Never>()
+    private let isConnectedSubject = CurrentValueSubject<Bool, Never>(true)
     
     init() {
         guard let reachability = try? Reachability() else {
@@ -26,13 +29,15 @@ class NetworkMonitor: NetworkMonitorProtocol {
         }
         
         self.reachability = reachability
+        
         reachability.whenReachable = { [weak self]reachability in
             let available = reachability.connection != .unavailable
-            self?.subject.send(available)
+            self?.isConnectedSubject.send(available)
         }
-        reachability.whenUnreachable = { [weak self] _ in
-            self?.subject.send(false)
+        reachability.whenUnreachable = { [weak self]_ in
+            self?.isConnectedSubject.send(false)
         }
+        
         do {
             try reachability.startNotifier()
         } catch {

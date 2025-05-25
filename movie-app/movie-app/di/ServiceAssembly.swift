@@ -49,5 +49,13 @@ class ServiceAssembly: Assembly{
             return NetworkMonitor()
         }.inObjectScope(.container)
         
+        container.register(MediaItemDetailStoreProtocol.self) { _ in
+            return MediaItemDetailStore()
+        }.inObjectScope(.container)
+        
+        container.register(CastMemberStoreProtocol.self) { _ in
+            return CastMemberStore()
+        }.inObjectScope(.container)
+        
     }
 }

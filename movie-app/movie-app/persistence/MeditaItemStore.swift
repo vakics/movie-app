@@ -35,20 +35,19 @@ class MediaItemStore: MediaItemStoreProtocol {
         self.realm = realm
         observeMediaItems()
     }
-
+    
     private func observeMediaItems() {
         let results = realm.objects(MediaItemEntity.self)
         notificationToken = results.observe { [weak self] changes in
             switch changes {
             case .initial(let items),
-                 .update(let items, _, _, _):
+                    .update(let items, _, _, _):
                 self?.subject.send(items.map { $0.toDomain })
             case .error(let error):
                 print("Realm observe error: \(error)")
             }
         }
     }
-
     func saveMediaItems(_ items: [MediaItem]) {
         let entities = items.map { item in
             MediaItemEntity(from: item)
@@ -57,7 +56,7 @@ class MediaItemStore: MediaItemStoreProtocol {
             realm.add(entities, update: .modified)
         }
     }
-
+    
     func deleteMediaItem(withId id: Int) {
         if let object = realm.object(ofType: MediaItemEntity.self, forPrimaryKey: id) {
             try? realm.write {
@@ -65,18 +64,18 @@ class MediaItemStore: MediaItemStoreProtocol {
             }
         }
     }
-
+    
     func deleteAll() {
         let all = realm.objects(MediaItemEntity.self)
         try? realm.write {
             realm.delete(all)
         }
     }
-
+    
     func isMediaItemStored(withId id: Int) -> Bool {
         realm.object(ofType: MediaItemEntity.self, forPrimaryKey: id) != nil
     }
-
+    
     deinit {
         notificationToken?.invalidate()
     }

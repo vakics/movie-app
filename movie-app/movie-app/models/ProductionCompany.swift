@@ -14,7 +14,7 @@ struct ProductionCompany: Decodable, Identifiable {
     let originCountry: String
     
     var imageUrl: URL? {
-        guard let logoPath = logoPath?.isEmpty else { return nil }
+        guard let logoPath = logoPath else { return nil }
         return URL(string: "https://image.tmdb.org/t/p/w500\(logoPath)")
     }
     
