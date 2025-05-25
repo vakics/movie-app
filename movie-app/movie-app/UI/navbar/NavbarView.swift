@@ -51,6 +51,11 @@ struct NavbarView: View {
                     .background(Color.tabBarBackground)
                     .ignoresSafeArea()
                 
+                SettingsView()
+                    .tag(TabType.settings)
+                    .background(Color.tabBarBackground)
+                    .ignoresSafeArea()
+                
             }
             .background(.clear)
             .padding(.bottom, LayoutConst.largePadding)

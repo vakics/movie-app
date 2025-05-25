@@ -21,6 +21,8 @@ extension ErrorPrentable {
             return AlertModel(title: "Client error", message: error.localizedDescription, dismissButtonTitle: "error.close")
         case .noInternetError:
             return nil
+        case .serverError:
+            return AlertModel(title: "Server error", message: error.localizedDescription, dismissButtonTitle: "error.close")
         default:
             return AlertModel(title: "error.unexpected.title", message: "error.unexpected.desc", dismissButtonTitle: "error.close")
         }

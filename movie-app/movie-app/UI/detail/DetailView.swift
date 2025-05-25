@@ -24,10 +24,10 @@ struct DetailView: View {
         
         return ScrollView {
             VStack(alignment: .leading, spacing: LayoutConst.largePadding) {
-                LoadImageView(url: mediaItemDetail.imageUrl) 
-                .frame(height: 180)
-                .frame(maxWidth: .infinity)
-                .cornerRadius(30)
+                LoadImageView(url: mediaItemDetail.imageUrl)
+                    .frame(height: 180)
+                    .frame(maxWidth: .infinity)
+                    .cornerRadius(30)
                 
                 HStack(spacing: 12.0) {
                     MovieLabel(type: .rating(value: mediaItemDetail.rating))
@@ -49,12 +49,12 @@ struct DetailView: View {
                 }
                 
                 HStack {
-                    StyledButton(style: .outlined, title: "detail.rate.button")
-                    Spacer()
-                    StyledButton(style: .filled, title: "detail.imdb.button") {
-                        let vc = SFSafariViewController(url: URL(string: "https://www.imdb.com/title/\(mediaItemDetail.imdbId)")!)
-                        UIApplication.shared.firstKeyWindow?.rootViewController?.present(vc, animated: true)
+                    NavigationLink(destination: AddReviewView(mediaItemDetail: mediaItemDetail)) {
+                        StyledButton(style: .outlined, title: "detail.rate.button", action: .simple)
                     }
+                    
+                    Spacer()
+                    StyledButton(style: .filled, title: "detail.imdb.button", action: .link(mediaItemDetail.imdbURL))
                 }
                 
                 VStack(alignment: .leading, spacing: 12.0) {
@@ -87,6 +87,7 @@ struct DetailView: View {
         }
         .showAlert(model: $viewModel.alertModel)
         .onAppear {
+            print("<<<DEBUG - onAppear with id: \(mediaItem.id)")
             viewModel.mediaItemIdSubject.send(mediaItem.id)
         }
     }

@@ -43,8 +43,8 @@ struct MediaItem: Identifiable {
         self.year = year
         self.duration = duration
         self.imageUrl = imageUrl
-        self.rating = dto.voteAverage
-        self.voteCount = dto.voteCount
+        self.rating = dto.voteAverage ?? 0.0
+        self.voteCount = dto.voteCount ?? 0
         
     }
     
@@ -65,18 +65,20 @@ struct MediaItem: Identifiable {
         self.year = year
         self.duration = duration
         self.imageUrl = imageUrl
-        self.rating = dto.voteAverage
-        self.voteCount = dto.voteCount
+        self.rating = dto.voteAverage ?? 0.0
+        self.voteCount = dto.voteCount ?? 0
+        
     }
     
-    init(mediaItemDetail: MediaItemDetail) {
-        self.id = mediaItemDetail.id
-        self.title = mediaItemDetail.title
-        self.year = mediaItemDetail.year
-        self.duration = "\(mediaItemDetail.runtime)"
-        self.imageUrl = mediaItemDetail.imageUrl
-        self.rating = mediaItemDetail.rating
-        self.voteCount = mediaItemDetail.voteCount
+    init(detail: MediaItemDetail) {
+        self.id = detail.id
+        self.title = detail.title
+        self.year = detail.year
+        self.duration = "1h 25min"
+        self.imageUrl = detail.imageUrl
+        self.rating = detail.rating
+        self.voteCount = detail.voteCount
+        
     }
     
 }

@@ -5,7 +5,7 @@
 //  Created by Panna Krisztina Pazonyi on 2025. 05. 08..
 //
 
-struct MovieDetailResponse: Decodable{
+struct MovieDetailResponse: Decodable {
     let id: Int
     let title: String
     let releaseDate: String?
@@ -18,9 +18,9 @@ struct MovieDetailResponse: Decodable{
     let runtime: Int
     let spokenLanguages: [SpokenLanguageResponse]
     let overview: String
-    let productionCompanies: [ProductionCompanyResponse]
     let imdbId: String
-    
+    let productionCompanies: [ProductionCompanyResponse]
+
     enum CodingKeys: String, CodingKey {
         case id
         case title

@@ -24,3 +24,9 @@
 "detail.overview" = "Synopsis";
 "detail.publishers" = "Publishers and companies";
 "detail.cast" = "Cast";
+"noInternet" = "No internet connection";
+"addReview.subTitle" = "Give it  a honest review";
+"addReview.buttonTitle" = "Send my review";
+"navbar.settings" = "Settings";
+"setting.language" = "Choose Language";
+"setting.mode" = "Choose the dark or light side";

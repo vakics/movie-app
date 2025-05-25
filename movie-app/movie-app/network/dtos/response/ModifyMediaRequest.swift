@@ -6,7 +6,7 @@
 //
 
 
-struct EditFavoriteResponse : Decodable {
+struct ModifyMediaRequest : Decodable {
     let success : Bool
     let statusCode : Int
     let statusMessage : String
