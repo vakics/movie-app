@@ -21,7 +21,7 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
     let favoriteButtonTapped = PassthroughSubject<Void, Never>()
     
     @Inject
-    private var service: ReactiveMoviesServiceProtocol
+    private var repository: MovieRepository
     
     @Inject
     private var mediaItemStore: MediaItemStoreProtocol
@@ -37,7 +37,7 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
                     preconditionFailure("There is no self")
                 }
                 let request = FetchDetailRequest(mediaId: mediaItemId)
-                return self.service.fetchMovieDetail(req: request)
+                return self.repository.fetchMovieDetail(req: request)
             }
         
         let credits = mediaItemIdSubject
@@ -47,7 +47,7 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
                     preconditionFailure("There is no self")
                 }
                 let request = FetchMovieCreditsRequest(mediaId: mediaItemId)
-                return self.service.fetchMovieCredits(req: request)
+                return self.repository.fetchMovieCredits(req: request)
             }
         
         Publishers.CombineLatest(details, credits)
@@ -74,7 +74,7 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
                 }
                 let isFavorite = !self.isFavorite
                 let request = EditFavoriteRequest(movieId: self.mediaItemDetail.id, isFavorite: isFavorite)
-                return service.editFavoriteMovie(req: request)
+                return repository.editFavoriteMovie(req: request)
                     .map { result in
                         (result, isFavorite)
                     }

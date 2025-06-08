@@ -8,35 +8,24 @@ import Foundation
 import InjectPropertyWrapper
 import Combine
 
-protocol GenreSectionViewModelProtocol: ObservableObject {
-    
+protocol GenreSectionViewModel: ObservableObject {
+    func loadGenres()
+    func genreAppeared()
 }
 
-class GenreSectionViewModel: GenreSectionViewModelProtocol, ErrorPrentable {
+class GenreSectionViewModelImp: GenreSectionViewModel, ErrorPrentable {
     private var cancellables = Set<AnyCancellable>()
     @Published var genres: [Genre] = []
     @Published var alertModel: AlertModel? = nil
-    
+    @Published var mediaItemsByGenre: [Int: [MediaItem]] = [:]
+    @Published var motdMovie: MediaItemDetail?
     @Inject
-    private var movieService: ReactiveMoviesServiceProtocol
-    @Inject
-        private var favoriteMediaStore: FavoriteMediaStoreProtocol
-    let typeSubject = PassthroughSubject<GenreType, Never>()
+    private var useCase: GenreSectionUseCase
+    let typeSubject = CurrentValueSubject<GenreType, Never>(.movie)
     
-    init() {
-        typeSubject
-            .flatMap { [weak self] type -> AnyPublisher<[Genre], MovieError> in
-                guard let self = self else {
-                    preconditionFailure("There is no self")
-                }
-                let request = FetchGenreRequest()
-                switch type {
-                case .movie:
-                    return self.movieService.fetchGenres(req: request)
-                case .tvShow:
-                    return self.movieService.fetchTVGenres(req: request)
-                }
-            }
+    func loadGenres() {
+        print("<<<viewmodel loadgenres")
+        useCase.loadGenres(typeSubject: typeSubject)
             .sink { [weak self] completion in
                 if case let .failure(error) = completion {
                     self?.alertModel = self?.toAlertModel(error)
@@ -45,21 +34,56 @@ class GenreSectionViewModel: GenreSectionViewModelProtocol, ErrorPrentable {
                 self?.genres = genres
             }
             .store(in: &cancellables)
-        let favoriteRequest = FetchFavoriteMovieRequest()
-                
-        movieService.fetchFavoriteMovies(req: favoriteRequest, fromLocal: true)
-                    .receive(on: RunLoop.main)
-                    .sink { completion in
-                        switch completion {
-                        case .failure(let error):
-                            self.alertModel = self.toAlertModel(error)
-                        case .finished:
-                            break
+    }
+    
+    func genreAppeared() {
+        useCase.genresAppeared()
+    }
+    
+    init() {
+        useCase.showAppearPopup
+                    .compactMap { showAppearPopup -> AlertModel? in
+                        if showAppearPopup {
+                            return AlertModel(title: "[[Értékeld az appot]]", message: "[[Értékeld az appot]]", dismissButtonTitle: "[[Rendben]]")
                         }
-                    } receiveValue: { [weak self]movies in
-                        self?.favoriteMediaStore.addFavoriteMediaItems(movies)
+                        return nil
+                    }
+                    .sink { [weak self]alertModel in
+                        self?.alertModel = alertModel
                     }
                     .store(in: &cancellables)
+    }
+    func loadMediaItems(genreId: Int, typeSubject: CurrentValueSubject<GenreType, Never>){
+        useCase.loadMediaItems(genreId: genreId, typeSubject: typeSubject)
+            .delay(for: .seconds(1), scheduler: RunLoop.main)
+            .sink{ completion in
+                if case let .failure(error) = completion {
+                    self.alertModel = self.toAlertModel(error)
+                }
+            } receiveValue: { mediaItems in
+                self.mediaItemsByGenre[genreId] = mediaItems
+                if self.motdMovie == nil{
+                    let randomMovie = mediaItems.randomElement()
+                    self.loadMotdMovie(movie: randomMovie ?? MediaItem())
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func loadMotdMovie(movie: MediaItem) {
+        useCase.loadMotdMovie(movie: movie)
+            .sink { completion in
+                if case let .failure(error) = completion {
+                    self.alertModel = self.toAlertModel(error)
+                }
+            } receiveValue: { movie in
+                self.motdMovie = movie
+            }
+            .store(in: &cancellables)
+    }
+    
+    func getMediaItemsByGenre(_ genreId: Int) -> [MediaItem]{
+        return self.mediaItemsByGenre[genreId] ?? [MediaItem(),MediaItem(id: -2),MediaItem(id: -3)]
     }
     
     //    init() {

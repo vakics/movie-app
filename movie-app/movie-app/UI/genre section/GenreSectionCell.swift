@@ -9,14 +9,18 @@ import SwiftUICore
 import SwiftUI
 
 struct GenreSectionCell: View {
-    var genre: Genre;
+    var genre: Genre
+    @State var isExpanded: Bool = false
+    
     var body : some View {
         HStack {
             Text(genre.name).font(Fonts.title)
                 .foregroundStyle(.primary)
             Spacer()
-            Image(.rightArrow)
-            }
+            RotatingArrow(isExpanded: isExpanded)
+                .onTapGesture {
+                    isExpanded.toggle()
+                }
+        }
     }
-    
 }

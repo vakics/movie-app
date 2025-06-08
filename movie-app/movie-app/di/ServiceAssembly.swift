@@ -34,8 +34,8 @@ class ServiceAssembly: Assembly{
             //            return MockMoviesService()
         }.inObjectScope(.container)
         
-        container.register(ReactiveMoviesServiceProtocol.self) {_ in
-            return ReactiveMoviesService()
+        container.register(MovieRepository.self) {_ in
+            return MovieRepositoryImp()
         }.inObjectScope(.container)
         container.register(FavoriteMediaStoreProtocol.self) { _ in
             return FavoriteMediaStore()
@@ -57,5 +57,8 @@ class ServiceAssembly: Assembly{
             return CastMemberStore()
         }.inObjectScope(.container)
         
+        container.register(GenreSectionUseCase.self) { _ in
+            return GenreSectionUseCaseImp()
+        }.inObjectScope(.container)
     }
 }

@@ -19,11 +19,14 @@ struct SearchView: View {
                         .foregroundColor(.white)
                         .frame(width: 24, height: 24)
                     
-                    TextField(LocalizedStringKey("search.textfield.placeholder"),
-                              text: $viewModel.searchText)
+                    TextField("",
+                              text: $viewModel.searchText,
+                              prompt: Text("search.textfield.placeholder".localized())
+                        .foregroundStyle(.invertedMain)
+                    )
                     .textFieldStyle(PlainTextFieldStyle())
-                    .font(Fonts.searchText)
-                    .foregroundColor(.white)
+                    .font(Fonts.caption)
+                    .foregroundColor(.invertedMain)
                     .onChange(of: viewModel.searchText) {
                         viewModel.startSearch.send(())
                     }
@@ -42,7 +45,7 @@ struct SearchView: View {
                     // Üres állapot
                     VStack {
                         Spacer()
-                        Text("search.empty.title")
+                        Text("search.empty.title".localized())
                             .multilineTextAlignment(.center)
                             .font(Fonts.emptyStateText)
                             .foregroundColor(.white)

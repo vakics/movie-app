@@ -14,11 +14,11 @@ struct MovieCellView: View {
         VStack(alignment: .leading, spacing: LayoutConst.smallPadding) {
             ZStack(alignment: .topLeading) {
                 HStack(alignment: .center) {
-                    LoadImageView(url: movie.imageUrl) 
-                    .frame(height: 150)
-                    .frame(maxWidth: .infinity)
-                    .clipped()
-                    .cornerRadius(12)
+                    LoadImageView(url: movie.imageUrl)
+                        .frame(height: 150)
+                        .frame(maxWidth: .infinity)
+                        .clipped()
+                        .cornerRadius(12)
                 }
                 
                 HStack(spacing: 12) {
@@ -29,17 +29,17 @@ struct MovieCellView: View {
             Text(movie.title)
                 .font(Fonts.subheading)
                 .lineLimit(2)
-
+            
             Text("\(movie.year)")
                 .font(Fonts.paragraph)
-
+            
             Text("\(movie.duration)")
                 .font(Fonts.caption)
-
+            
             Spacer()
-                
+            
         }
-
-        }
+        
     }
+}
 

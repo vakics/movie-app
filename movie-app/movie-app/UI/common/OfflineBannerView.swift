@@ -12,7 +12,7 @@ struct OfflineBannerView: View {
     var body: some View {
         HStack {
             Image(systemName: "wifi.slash")
-            Text(LocalizedStringKey("noInternet"))
+            Text("noInternet".localized())
                 .font(Fonts.caption)
         }
         .frame(maxWidth: .infinity)

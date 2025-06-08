@@ -27,6 +27,11 @@
 "noInternet" = "Nincs internet";
 "addReview.subTitle" = "Hány csillagra értékelnéd?";
 "addReview.buttonTitle" = "Küldd el az értékelésem";
-"navbar.settings" = "Beállítások";
-"setting.language" = "Válassz nyelvet";
-"setting.mode" = "Válaszd a világos vagy sötét oldalt";
+"settings.title" = "Beállítások";
+"settings.chooseLanguage" = "Nyelv kiválasztása";
+"settings.chooseTheme" = "Téma kiválasztása";
+"settings.lang.english" = "Angol";
+"settings.lang.russian" = "Orosz";
+"settings.lang.hungarian" = "Magyar";
+"settings.theme.light" = "Világos mód";
+"settings.theme.dark" = "Sötét mód";

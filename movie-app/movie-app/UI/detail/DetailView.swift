@@ -11,6 +11,7 @@ import SafariServices
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
     let mediaItem: MediaItem
+    @Environment(\.dismiss) private var dismiss: DismissAction
     
     var body: some View {
         
@@ -43,31 +44,31 @@ struct DetailView: View {
                     .font(Fonts.detailsTitle)
                 
                 HStack(spacing: LayoutConst.normalPadding) {
-                    DetailLabel(title: "detail.releaseDate", desc: mediaItemDetail.year)
-                    DetailLabel(title: "detail.runtime", desc: "\(mediaItemDetail.runtime)")
-                    DetailLabel(title: "detail.language", desc: mediaItemDetail.spokenLanguages)
+                    DetailLabel(title: "detail.releaseDate".localized(), desc: mediaItemDetail.year)
+                    DetailLabel(title: "detail.runtime".localized(), desc: "\(mediaItemDetail.runtime)")
+                    DetailLabel(title: "detail.language".localized(), desc: mediaItemDetail.spokenLanguages)
                 }
                 
                 HStack {
                     NavigationLink(destination: AddReviewView(mediaItemDetail: mediaItemDetail)) {
-                        StyledButton(style: .outlined, title: "detail.rate.button", action: .simple)
+                        StyledButton(style: .outlined, title: "detail.rate.button".localized(), action: .simple)
                     }
                     
                     Spacer()
-                    StyledButton(style: .filled, title: "detail.imdb.button", action: .link(mediaItemDetail.imdbURL))
+                    StyledButton(style: .filled, title: "detail.imdb.button".localized(), action: .link(mediaItemDetail.imdbURL))
                 }
                 
                 VStack(alignment: .leading, spacing: 12.0) {
-                    Text(LocalizedStringKey("detail.overview"))
+                    Text("detail.overview".localized())
                         .font(Fonts.overviewText)
                     
                     Text(mediaItemDetail.overview)
                         .font(Fonts.paragraph)
                         .lineLimit(nil)
                 }
-                ParticipantScrollView(title: "detail.publishers", participants: mediaItemDetail.productionCompanies)
+                ParticipantScrollView(title: "detail.publishers".localized(), participants: mediaItemDetail.productionCompanies)
                 
-                ParticipantScrollView(title: "detail.cast", participants: credits)
+                ParticipantScrollView(title: "detail.cast".localized(), participants: credits)
             }
             .padding(.horizontal, LayoutConst.maxPadding)
             .padding(.bottom, LayoutConst.largePadding)
