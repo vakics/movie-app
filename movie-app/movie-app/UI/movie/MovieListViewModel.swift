@@ -17,7 +17,7 @@ class MovieListViewModel: MovieListViewModelProtocol, ErrorPrentable {
     @Published var alertModel: AlertModel? = nil
     @Inject
     private var repository: MovieRepository
-    var actualPage: Int = 1
+    @Published var actualPage: Int = 1
     var totalPages: Int = Int.max
     @Published var isLoading: Bool = false
     

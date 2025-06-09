@@ -23,6 +23,11 @@ struct GenreSectionView: View {
                 }.ignoresSafeArea()
                 
                 List{
+                    if viewModel.motdMovie == nil {
+                        GenreMotdCell(mediaItem: MediaItemDetail(id: -5))
+                            .background(Color.clear)
+                            .listStyle(.plain)
+                    }
                     if let motd = viewModel.motdMovie {
                         GenreMotdCell(mediaItem: motd)
                             .background(Color.clear)

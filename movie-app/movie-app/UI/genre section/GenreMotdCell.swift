@@ -7,33 +7,40 @@
 
 
 import SwiftUI
+import Shimmer
 
 struct GenreMotdCell: View {
     let mediaItem: MediaItemDetail
     
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            LoadImageView(url: mediaItem.imageUrl)
+        if mediaItem.id<0{
+            Rectangle()
                 .frame(width: 370, height: 185)
-                .cornerRadius(12)
-            
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(mediaItem.genreList)
-                        .font(Fonts.paragraphList)
-                    Text(mediaItem.title)
-                        .font(Fonts.title)
-                }
-                .padding(LayoutConst.normalPadding)
+                .shimmering()
+        } else {
+            ZStack(alignment: .bottomLeading) {
+                LoadImageView(url: mediaItem.imageUrl)
+                    .frame(width: 370, height: 185)
+                    .cornerRadius(12)
                 
-                Spacer()
-                
-                Image(.playButton)
-                    .frame(width: 48, height: 48)
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(mediaItem.genreList)
+                            .font(Fonts.paragraphList)
+                        Text(mediaItem.title)
+                            .font(Fonts.title)
+                    }
                     .padding(LayoutConst.normalPadding)
+                    
+                    Spacer()
+                    
+                    Image(.playButton)
+                        .frame(width: 48, height: 48)
+                        .padding(LayoutConst.normalPadding)
+                }
             }
+            .padding(LayoutConst.maxPadding)
+            .background(Color.clear)
         }
-        .padding(LayoutConst.maxPadding)
-        .background(Color.clear)
     }
 }
