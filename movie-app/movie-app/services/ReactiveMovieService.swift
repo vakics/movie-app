@@ -11,12 +11,12 @@ import InjectPropertyWrapper
 import Combine
 import Alamofire
 
-protocol ReactiveMoviesServiceProtocol {
+protocol MovieRepository {
     func fetchGenres(req: FetchGenreRequest) -> AnyPublisher<[Genre], MovieError>
     func fetchTVGenres(req: FetchGenreRequest) -> AnyPublisher<[Genre], MovieError>
     func searchMovies(req: SearchMoviesRequest) -> AnyPublisher<[MediaItem], MovieError>
-    func fetchMovies(req: FetchMoviesRequest) -> AnyPublisher<[MediaItem], MovieError>
-    func fetchTVShows(req: FetchMoviesRequest) -> AnyPublisher<[MediaItem], MovieError>
+    func fetchMovies(req: FetchMoviesRequest) -> AnyPublisher<MediaItemPage, MovieError>
+    func fetchTVShows(req: FetchMoviesRequest) -> AnyPublisher<MediaItemPage, MovieError>
     func fetchMovieDetail(req: FetchDetailRequest) -> AnyPublisher<MediaItemDetail, MovieError>
     func fetchMovieCredits(req: FetchMovieCreditsRequest) -> AnyPublisher<[CastMember], MovieError>
     func fetchFavoriteMovies(req: FetchFavoriteMovieRequest, fromLocal: Bool) -> AnyPublisher<[MediaItem], MovieError>
@@ -24,7 +24,7 @@ protocol ReactiveMoviesServiceProtocol {
     func addReview(req: AddReviewRequest)->AnyPublisher<ModifyMediaResult, MovieError>
 }
 
-class ReactiveMoviesService: ReactiveMoviesServiceProtocol {
+class MovieRepositoryImp: MovieRepository {
     @Inject
     var moya: MoyaProvider<MultiTarget>!
     @Inject
@@ -60,12 +60,12 @@ class ReactiveMoviesService: ReactiveMoviesServiceProtocol {
         )
     }
     
-    func fetchMovies(req: FetchMoviesRequest) -> AnyPublisher<[MediaItem], MovieError> {
-        requestAndTransform(target: MultiTarget(MoviesApi.fetchMovies(req: req)), decodeTo: MoviePageResponse.self, transform: { $0.results.map(MediaItem.init(dto:)) })
+    func fetchMovies(req: FetchMoviesRequest) -> AnyPublisher<MediaItemPage, MovieError> {
+        requestAndTransform(target: MultiTarget(MoviesApi.fetchMovies(req: req)), decodeTo: MoviePageResponse.self, transform: { MediaItemPage.init(dto: $0) })
     }
     
-    func fetchTVShows(req: FetchMoviesRequest) -> AnyPublisher<[MediaItem], MovieError> {
-        requestAndTransform(target: MultiTarget(MoviesApi.fetchTVShows(req: req)), decodeTo: TVPageResponse.self, transform: {$0.results.map(MediaItem.init(dto:))})
+    func fetchTVShows(req: FetchMoviesRequest) -> AnyPublisher<MediaItemPage, MovieError> {
+        requestAndTransform(target: MultiTarget(MoviesApi.fetchTVShows(req: req)), decodeTo: TVPageResponse.self, transform: {MediaItemPage.init(dto: $0)})
     }
     
     func fetchMovieDetail(req: FetchDetailRequest) -> AnyPublisher<MediaItemDetail, MovieError> {

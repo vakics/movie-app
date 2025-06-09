@@ -13,8 +13,19 @@ class ViewModelAssembly: Assembly{
         container.register((any MovieListViewModelProtocol).self) {_ in
             return MovieListViewModel()
         }.inObjectScope(.container)
-        container.register((any GenreSectionViewModelProtocol).self) {_ in
-            return GenreSectionViewModel()
+        container.register((any GenreSectionViewModel).self) {_ in
+            return GenreSectionViewModelImp()
         }.inObjectScope(.container)
+        container.register((any SearchViewModelProtocol).self) { _ in
+            return SearchViewModel()
+        }.inObjectScope(.transient)
+        
+        container.register((any FavoriteViewModellProtocol).self) { _ in
+            return FavoriteViewModell()
+        }.inObjectScope(.transient)
+        
+        container.register((any SettingViewModelProtocol).self) { _ in
+            return SettingViewModel()
+        }.inObjectScope(.transient)
     }
 }

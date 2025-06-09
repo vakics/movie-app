@@ -23,8 +23,8 @@ struct MediaItemDetail: Identifiable {
     let imdbURL: URL?
     let productionCompanies: [ProductionCompany]
     
-    init() {
-        self.id = 0
+    init(id: Int = 0) {
+        self.id = id
         self.title = ""
         self.year = ""
         self.runtime = 0

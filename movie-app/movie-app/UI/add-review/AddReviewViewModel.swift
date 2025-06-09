@@ -15,7 +15,7 @@ class AddReviewViewModel: ObservableObject, ErrorPrentable {
     @Published var selectedRating: Int = -1
     
     @Inject
-    var service: ReactiveMoviesServiceProtocol
+    var repository: MovieRepository
     
     let mediaDetailSubject = PassthroughSubject<MediaItemDetail, Never>()
     let ratingBtnSubject = PassthroughSubject<Void, Never>()
@@ -35,7 +35,7 @@ class AddReviewViewModel: ObservableObject, ErrorPrentable {
                 }
                 let rating: Double = Double(self.selectedRating)
                 let request = AddReviewRequest(mediaId: mediaItemDetail.id, rating: rating)
-                return self.service.addReview(req: request)
+                return self.repository.addReview(req: request)
             }
             .sink(receiveCompletion: {_ in
                     

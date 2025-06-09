@@ -15,6 +15,8 @@
 		DE9D1FB72DD87F7500ACC3A7 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = DE9D1FB62DD87F7500ACC3A7 /* RealmSwift */; };
 		DE9D1FC02DD8982B00ACC3A7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = DE9D1FBF2DD8982B00ACC3A7 /* SDWebImageSwiftUI */; };
 		DE9D1FC52DD89C5400ACC3A7 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = DE9D1FC42DD89C5400ACC3A7 /* Reachability */; };
+		DEDA6D302DEAFE16008CE01F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = DEDA6D2F2DEAFE16008CE01F /* Lottie */; };
+		DEDA6D3C2DEB19E4008CE01F /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DEDA6D3B2DEB19E4008CE01F /* Shimmer */; };
 		DEF2F87B2DAE8525008B9D3A /* InjectPropertyWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = DEF2F87A2DAE8525008B9D3A /* InjectPropertyWrapper */; };
 		DEF2F8832DAE8562008B9D3A /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = DEF2F8822DAE8562008B9D3A /* Swinject */; };
 /* End PBXBuildFile section */
@@ -99,10 +101,12 @@
 				DE9D1FC02DD8982B00ACC3A7 /* SDWebImageSwiftUI in Frameworks */,
 				DE9D1FC52DD89C5400ACC3A7 /* Reachability in Frameworks */,
 				DE0472042DAA6530001CBD10 /* Moya in Frameworks */,
+				DEDA6D3C2DEB19E4008CE01F /* Shimmer in Frameworks */,
 				DE0472022DAA6530001CBD10 /* CombineMoya in Frameworks */,
 				DEF2F87B2DAE8525008B9D3A /* InjectPropertyWrapper in Frameworks */,
 				DE9D1FB72DD87F7500ACC3A7 /* RealmSwift in Frameworks */,
 				DEF2F8832DAE8562008B9D3A /* Swinject in Frameworks */,
+				DEDA6D302DEAFE16008CE01F /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +210,8 @@
 				DE9D1FB62DD87F7500ACC3A7 /* RealmSwift */,
 				DE9D1FBF2DD8982B00ACC3A7 /* SDWebImageSwiftUI */,
 				DE9D1FC42DD89C5400ACC3A7 /* Reachability */,
+				DEDA6D2F2DEAFE16008CE01F /* Lottie */,
+				DEDA6D3B2DEB19E4008CE01F /* Shimmer */,
 			);
 			productName = "movie-app";
 			productReference = DED05EFA2DA2C3FC00F0BDBE /* movie-app.app */;
@@ -241,6 +247,7 @@
 				en,
 				Base,
 				hu,
+				ru,
 			);
 			mainGroup = DED05EF12DA2C3FC00F0BDBE;
 			minimizedProjectReferenceProxies = 1;
@@ -253,6 +260,8 @@
 				DE9D1FB52DD87F7500ACC3A7 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				DE9D1FBE2DD8982B00ACC3A7 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				DE9D1FC32DD89C5400ACC3A7 /* XCRemoteSwiftPackageReference "Reachability" */,
+				DEDA6D2E2DEAFE16008CE01F /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				DEDA6D3A2DEB19E4008CE01F /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DED05EFB2DA2C3FC00F0BDBE /* Products */;
@@ -1824,6 +1833,22 @@
 				kind = branch;
 			};
 		};
+		DEDA6D2E2DEAFE16008CE01F /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+		DEDA6D3A2DEB19E4008CE01F /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.1;
+			};
+		};
 		DEF2F8792DAE8525008B9D3A /* XCRemoteSwiftPackageReference "InjectPropertyWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/egeniq/InjectPropertyWrapper";
@@ -1877,6 +1902,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DE9D1FC32DD89C5400ACC3A7 /* XCRemoteSwiftPackageReference "Reachability" */;
 			productName = Reachability;
+		};
+		DEDA6D2F2DEAFE16008CE01F /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DEDA6D2E2DEAFE16008CE01F /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+		DEDA6D3B2DEB19E4008CE01F /* Shimmer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DEDA6D3A2DEB19E4008CE01F /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
+			productName = Shimmer;
 		};
 		DEF2F87A2DAE8525008B9D3A /* InjectPropertyWrapper */ = {
 			isa = XCSwiftPackageProductDependency;

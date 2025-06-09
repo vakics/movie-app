@@ -18,24 +18,38 @@ struct MovieListView: View {
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 24) {
-                ForEach(viewModel.movies) { movie in
-                    NavigationLink(destination: DetailView(mediaItem: movie)){
+            LazyVGrid(columns: columns, spacing: LayoutConst.largePadding) {
+                ForEach(viewModel.movies.indices, id: \.self) { index in
+                    let movie = viewModel.movies[index]
+                    NavigationLink(destination: DetailView(mediaItem: movie)) {
                         MovieCellView(movie: movie)
+                            .onAppear {
+                                if index == viewModel.movies.count - 1 {
+                                    viewModel.reachedBottomSubject.send()
+                                }
+                            }
                     }
                     .buttonStyle(PlainButtonStyle())
                 }
             }
             .padding(.horizontal, LayoutConst.normalPadding)
             .padding(.top, LayoutConst.normalPadding)
+            
+            if viewModel.isLoading {
+                ProgressView()
+                    .padding()
+            }
+        }
+        .refreshable {
+            viewModel.movies = []
+            viewModel.actualPage = 1
+            viewModel.genreIdSubject.send(genre.id)
         }
         .navigationTitle(genre.name)
         .showAlert(model: $viewModel.alertModel)
         .onAppear {
-            Task {
-                viewModel.genreIdSubject.send(genre.id)
-                viewModel.typeSubject.send(showType)
-            }
+            viewModel.typeSubject.send(showType)
+            viewModel.genreIdSubject.send(genre.id)
         }
     }
 }

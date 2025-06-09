@@ -23,7 +23,7 @@ class SearchViewModel: SearchViewModelProtocol, ErrorPrentable {
         let startSearch = PassthroughSubject<Void, Never>()
     
     @Inject
-    private var service: ReactiveMoviesServiceProtocol
+    private var repository: MovieRepository
     
     init() {
         startSearch
@@ -34,7 +34,7 @@ class SearchViewModel: SearchViewModelProtocol, ErrorPrentable {
                     preconditionFailure("There is no self")
                 }
                 let request = SearchMoviesRequest(query: self.searchText)
-                return self.service.searchMovies(req: request)
+                return self.repository.searchMovies(req: request)
             }
             .sink { [weak self] completion in
                 if case let .failure(error) = completion {

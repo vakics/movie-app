@@ -20,6 +20,8 @@ struct SettingBlock: View {
                     buttons[index]
                         .padding(.horizontal, LayoutConst.smallPadding)
                         .lineLimit(1)
+                        .fixedSize()
+                        .frame(maxWidth: .infinity)
                 }
             }
         }
