@@ -16,9 +16,14 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
     @Published var credits: [CastMember] = []
     @Published var isFavorite: Bool = false
     @Published var alertModel: AlertModel? = nil
+    @Published var similarItems: [MediaItem] = []
+    @Published var isLoading: Bool = true
+    var pageNumber: Int = 1
     
     let mediaItemIdSubject = CurrentValueSubject<Int?, Never>(nil)
     let favoriteButtonTapped = PassthroughSubject<Void, Never>()
+    let reachedEndSubject = PassthroughSubject<Void, Never>()
+    let typeSubject = CurrentValueSubject<GenreType, Never>(.movie)
     
     @Inject
     private var repository: MovieRepository
@@ -29,6 +34,14 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
+        reachedEndSubject
+            .sink { _ in
+        } receiveValue: { _ in
+            self.isLoading = true
+            self.pageNumber = self.pageNumber + 1
+            self.mediaItemIdSubject.send(self.mediaItemDetail.id)
+        }.store(in: &cancellables)
+
         
         let details = mediaItemIdSubject
             .compactMap { $0 }
@@ -37,7 +50,7 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
                     preconditionFailure("There is no self")
                 }
                 let request = FetchDetailRequest(mediaId: mediaItemId)
-                return self.repository.fetchMovieDetail(req: request)
+                return typeSubject.value == .movie ? self.repository.fetchMovieDetail(req: request):self.repository.fetchTVDetail(req: request)
             }
         
         let credits = mediaItemIdSubject
@@ -49,21 +62,33 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
                 let request = FetchMovieCreditsRequest(mediaId: mediaItemId)
                 return self.repository.fetchMovieCredits(req: request)
             }
+        let similars = mediaItemIdSubject
+            .compactMap { $0 }
+            .flatMap { [weak self] mediaItemId in
+                guard let self = self else {
+                    preconditionFailure("There is no self")
+                }
+                let request = FetchSimilarMovie(movieId: mediaItemId, pageNumber: pageNumber)
+                return self.repository.fetchSimilarMovies(req: request)
+            }
         
-        Publishers.CombineLatest(details, credits)
+        Publishers.CombineLatest3(details, credits, similars)
             .receive(on: RunLoop.main)
             .sink { [weak self] completion in
                 if case let .failure(error) = completion {
                     self?.alertModel = self?.toAlertModel(error)
+                    self?.isLoading = false
                 }
-            } receiveValue: { [weak self] details, credits in
+            } receiveValue: { [weak self] details, credits, similars in
                 guard let self = self else {
                     preconditionFailure("There is no self")
                 }
                 print("<<<DEBUG - Loaded detail id: \(details.id)")
                 self.mediaItemDetail = details
                 self.credits = credits
+                self.similarItems.append(contentsOf: similars.mediaItems)
                 self.isFavorite = self.mediaItemStore.isMediaItemStored(withId: details.id)
+                self.isLoading = false
             }
             .store(in: &cancellables)
         

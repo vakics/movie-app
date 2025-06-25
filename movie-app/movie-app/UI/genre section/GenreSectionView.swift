@@ -12,7 +12,7 @@ struct GenreSectionView: View {
     @StateObject private var viewModel  = GenreSectionViewModelImp()
     
     var body: some View {
-        NavigationView {
+//        NavigationView {
             ZStack {
                 VStack {
                     HStack{
@@ -29,17 +29,19 @@ struct GenreSectionView: View {
                             .listStyle(.plain)
                     }
                     if let motd = viewModel.motdMovie {
-                        GenreMotdCell(mediaItem: motd)
-                            .background(Color.clear)
-                            .listStyle(.plain)
+                        NavigationLink(destination: DetailView(mediaItem: MediaItem(detail: motd), type: .movie)){
+                            GenreMotdCell(mediaItem: motd)
+                                .background(Color.clear)
+                                .listStyle(.plain)
+                        }
                     }
                     ForEach(viewModel.genres) {genre in
                         ZStack {
-                            NavigationLink(destination: MovieListView(showType: type, genre: genre)) {
+                            NavigationLink(destination: MediaItemListView(showType: type, genre: genre)) {
                                 EmptyView()
                             }.opacity(0)
                             let mediaItems = viewModel.getMediaItemsByGenre(genre.id)
-                            MediaItemListByGenre(genre: genre, mediaItems: mediaItems)
+                            MediaItemListByGenre(genre: genre, mediaItems: mediaItems, type: type)
                                 .onAppear{
                                     if viewModel.mediaItemsByGenre[genre.id] == nil{
                                         viewModel.loadMediaItems(genreId: genre.id, typeSubject: viewModel.typeSubject)
@@ -52,9 +54,9 @@ struct GenreSectionView: View {
                     }
                     
                 }
-                .accessibilityLabel("testCollectionView")
                 .listStyle(.plain)
                 .navigationTitle(type == .movie ? "Movie" : "Tv Show")
+                .accessibilityLabel("genreSectionCollectionView")
                 
                 
             }
@@ -66,7 +68,7 @@ struct GenreSectionView: View {
                 
             }
             .showAlert(model: $viewModel.alertModel)
-        }
+//        }
     }
 }
 
