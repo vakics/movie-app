@@ -1,13 +1,14 @@
 //
-//  movie_appUITests.swift
-//  movie-appUITests
+//  movie_appUI2Tests.swift
+//  movie-appUI2Tests
 //
-//  Created by Panna Krisztina Pazonyi on 2025. 04. 22..
+//  Created by Panna Krisztina Pazonyi on 2025. 06. 23..
 //
 
 import XCTest
 
-final class movie_appUITests: XCTestCase {
+final class movie_appUI2Tests: XCTestCase {
+    let app = XCUIApplication()
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -16,6 +17,8 @@ final class movie_appUITests: XCTestCase {
         continueAfterFailure = false
 
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        app.launch()
+        sleep(3)
     }
 
     override func tearDownWithError() throws {
@@ -25,8 +28,7 @@ final class movie_appUITests: XCTestCase {
     @MainActor
     func testExample() throws {
         // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
+        
 
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
