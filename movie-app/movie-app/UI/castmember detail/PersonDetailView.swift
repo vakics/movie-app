@@ -81,6 +81,13 @@ struct CastDetailView: View {
                             }
                             .padding(.horizontal)
                             
+                            if viewModel.credits.count != 0{
+                                Text("Casted in")
+                                    .font(Fonts.title)
+                                    .padding(.horizontal)
+                                CreditsScrollView(mediaItems: viewModel.credits)
+                            }
+                            
                         }
                         .padding(.bottom, 48)
                     } else {

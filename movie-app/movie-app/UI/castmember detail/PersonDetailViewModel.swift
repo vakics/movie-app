@@ -11,6 +11,9 @@ import Combine
 import InjectPropertyWrapper
 
 enum CastDetailType{
+    case castMember(id: Int)
+    case company(id:Int)
+    
     var id: Int{
         switch self{
         case .castMember(id: let id):
@@ -19,15 +22,13 @@ enum CastDetailType{
             return id
         }
     }
-    case castMember(id: Int)
-    case company(id:Int)
-    
 }
 
 class CastDetailViewModel: ObservableObject, ErrorPrentable {
     @Published var castDetail: CastDetail?
     @Published var alertModel: AlertModel? = nil
     @Published var rating: Int = 0
+    @Published var credits: [CombinedMediaItem] = []
     
     let castTypeSubject = PassthroughSubject<CastDetailType, Never>()
     
@@ -37,7 +38,7 @@ class CastDetailViewModel: ObservableObject, ErrorPrentable {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        castTypeSubject
+        let details = castTypeSubject
             .flatMap { [weak self] participantType -> AnyPublisher<CastDetail, MovieError> in
                 guard let self = self else {
                     return Fail(error: MovieError.unexpectedError).eraseToAnyPublisher()
@@ -49,16 +50,33 @@ class CastDetailViewModel: ObservableObject, ErrorPrentable {
                 case .company:
                     return self.repository.fetchCompanyDetail(req: request)
                 }
+            }
+        let credit = castTypeSubject
+            .flatMap { [weak self] participantType -> AnyPublisher<[CombinedMediaItem], MovieError> in
+                guard let self = self else {
+                    return Fail(error: MovieError.unexpectedError).eraseToAnyPublisher()
+                }
+                switch participantType{
+                case .castMember:
+                    let request = FetchCastMemberDetailRequest(memberId: participantType.id)
+                    return self.repository.fetchCombinedCredits(req: request)
+                case .company:
+                    return Just<[CombinedMediaItem]>([])
+                        .setFailureType(to: MovieError.self)
+                        .eraseToAnyPublisher()
+                    
+                }
                 
             }
-            .receive(on: RunLoop.main)
+        Publishers.CombineLatest(details, credit)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
                     self?.alertModel = self?.toAlertModel(error)
                 }
-            }, receiveValue: { [weak self] castDetail in
+            }, receiveValue: { [weak self] castDetail, credit in
                 self?.castDetail = castDetail
                 self?.rating = self?.calculateStarRating(for: castDetail.popularity) ?? 0
+                self?.credits = credit
             })
             .store(in: &cancellables)
     }

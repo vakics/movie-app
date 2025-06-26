@@ -13,7 +13,6 @@ struct DetailView: View {
     let mediaItem: MediaItem
     let type: GenreType
     @Environment(\.dismiss) private var dismiss: DismissAction
-    @State var isExpanded: Bool = false
     
     var body: some View {
         
@@ -77,10 +76,6 @@ struct DetailView: View {
                         Text("Similar").font(Fonts.title)
                             .foregroundStyle(.primary)
                         Spacer()
-                        RotatingArrow(isExpanded: isExpanded)
-                            .onTapGesture {
-                                isExpanded.toggle()
-                            }
                     }
                     MediaItemScrollView(mediaItems: viewModel.similarItems, isLoading: viewModel.isLoading, reachedEndSubject: viewModel.reachedEndSubject, type: type)
                 }
