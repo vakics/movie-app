@@ -11,6 +11,7 @@ import SafariServices
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
     let mediaItem: MediaItem
+    let type: GenreType
     @Environment(\.dismiss) private var dismiss: DismissAction
     
     var body: some View {
@@ -31,11 +32,11 @@ struct DetailView: View {
                     .cornerRadius(30)
                 
                 HStack(spacing: 12.0) {
-                    MovieLabel(type: .rating(value: mediaItemDetail.rating))
-                    MovieLabel(type: .voteCount(vote: mediaItemDetail.voteCount))
-                    MovieLabel(type: .popularity(popularity: mediaItemDetail.popularity))
+                    MediaItemLabel(type: .rating(value: mediaItemDetail.rating))
+                    MediaItemLabel(type: .voteCount(vote: mediaItemDetail.voteCount))
+                    MediaItemLabel(type: .popularity(popularity: mediaItemDetail.popularity))
                     Spacer()
-                    MovieLabel(type: .adult(adult: mediaItemDetail.adult))
+                    MediaItemLabel(type: .adult(adult: mediaItemDetail.adult))
                 }
                 
                 Text(viewModel.mediaItemDetail.genreList)
@@ -66,9 +67,18 @@ struct DetailView: View {
                         .font(Fonts.paragraph)
                         .lineLimit(nil)
                 }
-                ParticipantScrollView(title: "detail.publishers".localized(), participants: mediaItemDetail.productionCompanies)
+                ParticipantScrollView(navigationType: .company,title: "detail.publishers".localized(), participants: mediaItemDetail.productionCompanies)
                 
-                ParticipantScrollView(title: "detail.cast".localized(), participants: credits)
+                ParticipantScrollView(navigationType: .person, title: "detail.cast".localized(), participants: credits)
+                
+                VStack{
+                    HStack {
+                        Text("Similar").font(Fonts.title)
+                            .foregroundStyle(.primary)
+                        Spacer()
+                    }
+                    MediaItemScrollView(mediaItems: viewModel.similarItems, isLoading: viewModel.isLoading, reachedEndSubject: viewModel.reachedEndSubject, type: type)
+                }
             }
             .padding(.horizontal, LayoutConst.maxPadding)
             .padding(.bottom, LayoutConst.largePadding)
@@ -90,6 +100,7 @@ struct DetailView: View {
         .onAppear {
             print("<<<DEBUG - onAppear with id: \(mediaItem.id)")
             viewModel.mediaItemIdSubject.send(mediaItem.id)
+            viewModel.typeSubject.send(type)
         }
     }
 }

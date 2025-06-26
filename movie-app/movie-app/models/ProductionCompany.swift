@@ -9,7 +9,7 @@ import Foundation
 
 struct ProductionCompany: Decodable, Identifiable {
     let id: Int
-    let logoPath: String?
+    let logoPath: URL?
     let name: String
     let originCountry: String
     
@@ -19,7 +19,7 @@ struct ProductionCompany: Decodable, Identifiable {
     }
     
     init(id: Int,
-         logoPath: String,
+         logoPath: URL?,
          name: String,
          originCountry: String) {
         self.id = id
@@ -30,7 +30,7 @@ struct ProductionCompany: Decodable, Identifiable {
     
     init(dto: ProductionCompanyResponse) {
         self.id = dto.id
-        self.logoPath = dto.logoPath
+        self.logoPath = dto.logoPath.flatMap { URL(string: "https://image.tmdb.org/t/p/w185\($0)") }
         self.name = dto.name
         self.originCountry = dto.originCountry
     }

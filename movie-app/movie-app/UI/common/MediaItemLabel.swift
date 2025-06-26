@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-enum MovieLabelType {
+enum MediaItemLabelType {
     case rating(value: Double)
     case voteCount(vote: Int)
     case popularity(popularity: Double)
     case adult(adult: Bool)
 }
 
-struct MovieLabel: View {
-    let type: MovieLabelType
+struct MediaItemLabel: View {
+    let type: MediaItemLabelType
     
     var body: some View {
         var imageRes: ImageResource

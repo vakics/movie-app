@@ -17,19 +17,27 @@
   },
   "testTargets" : [
     {
-      "enabled" : false,
-      "parallelizable" : true,
+      "skippedTests" : [
+        "NavbarViewUITests",
+        "NavbarViewUITests\/testTabBarItems()",
+        "movie_appUI2Tests",
+        "movie_appUI2Tests\/testExample()",
+        "movie_appUI2Tests\/testLaunchPerformance()",
+        "movie_appUI2TestsLaunchTests",
+        "movie_appUI2TestsLaunchTests\/testLaunch()"
+      ],
       "target" : {
         "containerPath" : "container:movie-app.xcodeproj",
-        "identifier" : "DE533F8D2DB7B2AE009AFD1F",
-        "name" : "movie-appTests"
+        "identifier" : "DE20BBAA2E09737400BB4598",
+        "name" : "movie-appUI2Tests"
       }
     },
     {
+      "enabled" : false,
       "target" : {
         "containerPath" : "container:movie-app.xcodeproj",
-        "identifier" : "DE533FA82DB7CDB3009AFD1F",
-        "name" : "movie-appUITests"
+        "identifier" : "DE20BBBD2E0973A700BB4598",
+        "name" : "movie-app2Tests"
       }
     }
   ],

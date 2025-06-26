@@ -11,19 +11,20 @@ import Shimmer
 struct MediaItemListByGenre: View {
     let genre: Genre
     let mediaItems: [MediaItem]
+    let type: GenreType
     var body: some View {
         VStack{
             GenreSectionCell(genre: genre)
             ScrollView(.horizontal){
                 LazyHStack(spacing: 20){
                     ForEach(mediaItems){mediaItem in
-                        NavigationLink(destination: DetailView(mediaItem: mediaItem)){
+                        NavigationLink(destination: DetailView(mediaItem: mediaItem, type: type)){
                             if mediaItem.id < 0{
                                 Rectangle()
                                     .frame(width: 200, height: 100)
                                     .shimmering()
                             } else {
-                                MovieCellView(movie: mediaItem)
+                                MediaItemCellView(movie: mediaItem)
                                     .frame(width: 200)
                             }
                         }
