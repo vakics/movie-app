@@ -1,13 +1,13 @@
 //
-//  movie_appTests.swift
-//  movie-appTests
+//  movie_app2Tests.swift
+//  movie-app2Tests
 //
-//  Created by Panna Krisztina Pazonyi on 2025. 04. 22..
+//  Created by Panna Krisztina Pazonyi on 2025. 06. 23..
 //
 
 import XCTest
 
-final class movie_appTests: XCTestCase {
+final class movie_app2Tests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

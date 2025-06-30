@@ -12,7 +12,7 @@ struct CastMember: Identifiable {
     let name: String
     let castImageURL: URL?
 
-    init(dto: CastMemberResponse) {
+    init(dto: CastMemberResponse) { 
         self.id = dto.id
         self.name = dto.name
         self.castImageURL = dto.profilePath.flatMap { URL(string: "https://image.tmdb.org/t/p/w185\($0)") }

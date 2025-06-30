@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MovieCellView: View {
+struct MediaItemCellView: View {
     let movie: MediaItem
     
     var body: some View {
@@ -22,8 +22,8 @@ struct MovieCellView: View {
                 }
                 
                 HStack(spacing: 12) {
-                    MovieLabel(type: .rating(value: movie.rating))
-                    MovieLabel(type: .voteCount(vote: movie.voteCount))
+                    MediaItemLabel(type: .rating(value: movie.rating))
+                    MediaItemLabel(type: .voteCount(vote: movie.voteCount))
                 }.padding(LayoutConst.smallPadding)
             }
             Text(movie.title)

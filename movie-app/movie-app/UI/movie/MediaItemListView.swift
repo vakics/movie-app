@@ -6,9 +6,9 @@
 //
 import SwiftUI
 
-struct MovieListView: View {
+struct MediaItemListView: View {
     var showType: GenreType
-    @StateObject private var viewModel = MovieListViewModel()
+    @StateObject private var viewModel = MediaItemListViewModel()
     let genre: Genre
     
     let columns = [
@@ -19,12 +19,12 @@ struct MovieListView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: LayoutConst.largePadding) {
-                ForEach(viewModel.movies.indices, id: \.self) { index in
-                    let movie = viewModel.movies[index]
-                    NavigationLink(destination: DetailView(mediaItem: movie)) {
-                        MovieCellView(movie: movie)
+                ForEach(viewModel.mediaItems.indices, id: \.self) { index in
+                    let mediaItem = viewModel.mediaItems[index]
+                    NavigationLink(destination: DetailView(mediaItem: mediaItem, type: showType)) {
+                        MediaItemCellView(movie: mediaItem)
                             .onAppear {
-                                if index == viewModel.movies.count - 1 {
+                                if index == viewModel.mediaItems.count - 1 {
                                     viewModel.reachedBottomSubject.send()
                                 }
                             }
@@ -41,7 +41,7 @@ struct MovieListView: View {
             }
         }
         .refreshable {
-            viewModel.movies = []
+            viewModel.mediaItems = []
             viewModel.actualPage = 1
             viewModel.genreIdSubject.send(genre.id)
         }

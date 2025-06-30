@@ -38,7 +38,9 @@ struct MainTab: View {
                 }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
-            }.navigationTitle("mainTab.title".localized())
+            }
+            .navigationTitle("mainTab.title".localized())
+                .accessibilityLabel("genreSectionCollectionView")
         }
     }
 }

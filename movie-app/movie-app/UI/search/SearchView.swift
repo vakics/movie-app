@@ -55,7 +55,7 @@ struct SearchView: View {
                     ScrollView {
                         VStack(spacing: 16) {
                             ForEach(viewModel.movies) { movie in
-                                MovieCellView(movie: movie)
+                                MediaItemCellView(movie: movie)
                                     .frame(height: 277)
                             }
                         }

@@ -8,12 +8,12 @@ import InjectPropertyWrapper
 import Combine
 import Foundation
 
-protocol MovieListViewModelProtocol: ObservableObject{
+protocol MediaItemListViewModelProtocol: ObservableObject{
     
 }
 
-class MovieListViewModel: MovieListViewModelProtocol, ErrorPrentable {
-    @Published var movies: [MediaItem] = []
+class MediaItemListViewModel: MediaItemListViewModelProtocol, ErrorPrentable {
+    @Published var mediaItems: [MediaItem] = []
     @Published var alertModel: AlertModel? = nil
     @Inject
     private var repository: MovieRepository
@@ -59,7 +59,7 @@ class MovieListViewModel: MovieListViewModelProtocol, ErrorPrentable {
                     self?.isLoading = false
                 }
             } receiveValue: { [weak self] page in
-                self?.movies.append(contentsOf: page.mediaItems)
+                self?.mediaItems.append(contentsOf: page.mediaItems)
                 self?.actualPage += 1
                 self?.totalPages = page.totalPages
                 self?.isLoading = false
