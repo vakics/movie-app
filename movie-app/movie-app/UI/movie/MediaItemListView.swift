@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct MediaItemListView: View {
-    var showType: GenreType
+    var showType: MediaItemType
     @StateObject private var viewModel = MediaItemListViewModel()
     let genre: Genre
     
@@ -21,7 +21,7 @@ struct MediaItemListView: View {
             LazyVGrid(columns: columns, spacing: LayoutConst.largePadding) {
                 ForEach(viewModel.mediaItems.indices, id: \.self) { index in
                     let mediaItem = viewModel.mediaItems[index]
-                    NavigationLink(destination: DetailView(mediaItem: mediaItem, type: showType)) {
+                    NavigationLink(destination: DetailView(mediaItem: mediaItem)) {
                         MediaItemCellView(movie: mediaItem)
                             .onAppear {
                                 if index == viewModel.mediaItems.count - 1 {

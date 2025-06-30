@@ -10,11 +10,11 @@ import InjectPropertyWrapper
 
 protocol GenreSectionUseCase{
     var showAppearPopup: AnyPublisher<Bool, Never> {get}
-    func loadGenres(typeSubject: CurrentValueSubject<GenreType, Never>) -> AnyPublisher<[Genre], MovieError>
+    func loadGenres(typeSubject: CurrentValueSubject<MediaItemType, Never>) -> AnyPublisher<[Genre], MovieError>
     func genresAppeared()
-    func getType(typeSubject: CurrentValueSubject<GenreType, Never>) -> GenreType
-    func loadMediaItems(genreId: Int, typeSubject: CurrentValueSubject<GenreType, Never>) -> AnyPublisher<[MediaItem], MovieError>
-    func loadMotdMovie(movie: MediaItem) -> AnyPublisher<MediaItemDetail, MovieError>
+    func getType(typeSubject: CurrentValueSubject<MediaItemType, Never>) -> MediaItemType
+    func loadMediaItems(genreId: Int, typeSubject: CurrentValueSubject<MediaItemType, Never>) -> AnyPublisher<[MediaItem], MovieError>
+    func loadMotdMovie(type: MediaItemType) -> AnyPublisher<MediaItemDetail, MovieError>
 }
 
 class GenreSectionUseCaseImp: GenreSectionUseCase{
@@ -33,11 +33,11 @@ class GenreSectionUseCaseImp: GenreSectionUseCase{
         .eraseToAnyPublisher()
     }
     
-    func getType(typeSubject: CurrentValueSubject<GenreType, Never>) -> GenreType {
+    func getType(typeSubject: CurrentValueSubject<MediaItemType, Never>) -> MediaItemType {
         return typeSubject.value
     }
     
-    func loadGenres(typeSubject: CurrentValueSubject<GenreType, Never>) -> AnyPublisher<[Genre], MovieError> {
+    func loadGenres(typeSubject: CurrentValueSubject<MediaItemType, Never>) -> AnyPublisher<[Genre], MovieError> {
         let type = getType(typeSubject: typeSubject)
         let request = FetchGenreRequest()
         let genres = switch type {
@@ -45,8 +45,11 @@ class GenreSectionUseCaseImp: GenreSectionUseCase{
             self.repository.fetchGenres(req: request)
         case .tvShow:
             self.repository.fetchTVGenres(req: request)
+        case .unknown:
+            Just<[Genre]>([])
+                .setFailureType(to: MovieError.self)
+                .eraseToAnyPublisher()
         }
-        print(genres)
         return genres
             .handleEvents(receiveOutput: {genres in
                 print(genres.count)
@@ -57,7 +60,7 @@ class GenreSectionUseCaseImp: GenreSectionUseCase{
         apperCounter += 1
         appearSubject.send(apperCounter)
     }
-    func loadMediaItems(genreId: Int, typeSubject: CurrentValueSubject<GenreType, Never>) -> AnyPublisher<[MediaItem], MovieError> {
+    func loadMediaItems(genreId: Int, typeSubject: CurrentValueSubject<MediaItemType, Never>) -> AnyPublisher<[MediaItem], MovieError> {
         let request = FetchMoviesRequest(genreId: genreId, pageNumber: actualPage)
         let mediaItemPages = getType(typeSubject: typeSubject) == .tvShow ? self.repository.fetchTVShows(req: request) : self.repository.fetchMovies(req: request)
         return mediaItemPages.map({ page in
@@ -65,11 +68,21 @@ class GenreSectionUseCaseImp: GenreSectionUseCase{
         }).eraseToAnyPublisher()
     }
     
-    func loadMotdMovie(movie: MediaItem) -> AnyPublisher<MediaItemDetail, MovieError> {
-        let request = FetchDetailRequest(mediaId: movie.id)
-        return self.repository.fetchMovieDetail(req: request)
+    func loadMotdMovie(type: MediaItemType) -> AnyPublisher<MediaItemDetail, MovieError> {
+        loadRandomMediaItems(type: type)
+            .compactMap{$0.randomElement()}
+            .flatMap { randomItem in
+                let request = FetchDetailRequest(mediaId: randomItem.id)
+                return type == .tvShow ? self.repository.fetchTVDetail(req: request) : self.repository.fetchMovieDetail(req: request)
+            }
+            .eraseToAnyPublisher()
+        
     }
     
+    func loadRandomMediaItems(type: MediaItemType) -> AnyPublisher<[MediaItem], MovieError>{
+        let request = FetchRandomMediaItems()
+        return type == .tvShow ? self.repository.fetchRandomTvShows(req: request) : self.repository.fetchRandomMovies(req: request)
+    }
 }
 
 

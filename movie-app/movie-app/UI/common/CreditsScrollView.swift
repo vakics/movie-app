@@ -14,7 +14,7 @@ struct CreditsScrollView: View{
         ScrollView(.horizontal){
             LazyHStack(spacing: 20){
                 ForEach(mediaItems, id: \.mediaItem.id){mediaItem in
-                    NavigationLink(destination: DetailView(mediaItem: mediaItem.mediaItem, type: mediaItem.showType)){
+                    NavigationLink(destination: DetailView(mediaItem: mediaItem.mediaItem)){
                         VStack{
                             MediaItemCellView(movie: mediaItem.mediaItem)
                                 .frame(width: 200)

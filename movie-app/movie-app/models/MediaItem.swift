@@ -12,6 +12,12 @@ struct MediaItemPage {
     let totalPages: Int
     let mediaItems: [MediaItem]
     
+    init(){
+        self.page = 0
+        self.totalPages = 0
+        self.mediaItems = []
+    }
+    
     init(dto: MoviePageResponse) {
         self.page = dto.page
         self.totalPages = dto.totalPages
@@ -33,6 +39,7 @@ struct MediaItem: Identifiable {
     let imageUrl: URL?
     let rating: Double
     let voteCount: Int
+    let showType: MediaItemType
     
     init(id: Int = -1) {
         self.id = id
@@ -42,6 +49,7 @@ struct MediaItem: Identifiable {
         self.imageUrl = nil
         self.rating = 0
         self.voteCount = 0
+        self.showType = .unknown
     }
     
     init(id: Int, title: String, year: String, duration: String, imageUrl: URL?, rating: Double, voteCount: Int) {
@@ -52,6 +60,18 @@ struct MediaItem: Identifiable {
         self.imageUrl = imageUrl
         self.rating = rating
         self.voteCount = voteCount
+        self.showType = .unknown
+    }
+    
+    init(id: Int, title: String, year: String, duration: String, imageUrl: URL?, rating: Double, voteCount: Int, showType: MediaItemType) {
+        self.id = id
+        self.title = title
+        self.year = year
+        self.duration = duration
+        self.imageUrl = imageUrl
+        self.rating = rating
+        self.voteCount = voteCount
+        self.showType = showType
     }
     
     init(dto: MovieResponse) {
@@ -73,7 +93,7 @@ struct MediaItem: Identifiable {
         self.imageUrl = imageUrl
         self.rating = dto.voteAverage ?? 0.0
         self.voteCount = dto.voteCount ?? 0
-        
+        self.showType = .movie
     }
     
     init(dto: TVResponse) {
@@ -95,7 +115,7 @@ struct MediaItem: Identifiable {
         self.imageUrl = imageUrl
         self.rating = dto.voteAverage ?? 0.0
         self.voteCount = dto.voteCount ?? 0
-        
+        self.showType = .tvShow
     }
     
     init(detail: MediaItemDetail) {
@@ -106,7 +126,7 @@ struct MediaItem: Identifiable {
         self.imageUrl = detail.imageUrl
         self.rating = detail.rating
         self.voteCount = detail.voteCount
-        
+        self.showType = detail.showType
     }
     
     init(dto: CombinedMediaItemResponse){
@@ -127,6 +147,14 @@ struct MediaItem: Identifiable {
         self.imageUrl = imageUrl
         self.rating = dto.voteAverage
         self.voteCount = dto.voteCount
+        switch dto.mediaType{
+        case "movie":
+            self.showType = .movie
+        case "tv":
+            self.showType = .tvShow
+        default:
+            self.showType = .unknown
+        }
     }
     
 }

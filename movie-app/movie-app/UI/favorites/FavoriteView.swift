@@ -16,7 +16,7 @@ struct FavoritesView: View {
             ScrollView {
                 LazyVStack(spacing: LayoutConst.normalPadding) {
                     ForEach(viewModel.mediaItems) { movie in
-                        NavigationLink(destination: DetailView(mediaItem: movie, type: .movie)) {
+                        NavigationLink(destination: DetailView(mediaItem: movie)) {
                             MediaItemCellView(movie: movie)
                                 .frame(height: 277)
                         }

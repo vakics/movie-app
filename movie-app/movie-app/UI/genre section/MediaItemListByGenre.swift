@@ -11,14 +11,13 @@ import Shimmer
 struct MediaItemListByGenre: View {
     let genre: Genre
     let mediaItems: [MediaItem]
-    let type: GenreType
     var body: some View {
         VStack{
             GenreSectionCell(genre: genre)
             ScrollView(.horizontal){
                 LazyHStack(spacing: 20){
                     ForEach(mediaItems){mediaItem in
-                        NavigationLink(destination: DetailView(mediaItem: mediaItem, type: type)){
+                        NavigationLink(destination: DetailView(mediaItem: mediaItem)){
                             if mediaItem.id < 0{
                                 Rectangle()
                                     .frame(width: 200, height: 100)

@@ -61,7 +61,7 @@ struct SettingsView: View {
                 .padding(.bottom, 43)
                 Spacer()
                 VStack(spacing: LayoutConst.smallPadding) {
-                    Text("Version 0.9.1")
+                    Text("Version \(viewModel.appInfo)")
                     Text("Created by Hell yeah")
                 }
                 .font(Fonts.subheading)

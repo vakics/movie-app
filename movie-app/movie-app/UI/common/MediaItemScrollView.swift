@@ -12,13 +12,12 @@ struct MediaItemScrollView: View{
     let mediaItems: [MediaItem]
     var isLoading: Bool
     let reachedEndSubject: PassthroughSubject<Void, Never>
-    let type: GenreType
     
     var body: some View{
         ScrollView(.horizontal){
             LazyHStack(spacing: 20){
                 ForEach(mediaItems){mediaItem in
-                    NavigationLink(destination: DetailView(mediaItem: mediaItem, type: type)){
+                    NavigationLink(destination: DetailView(mediaItem: mediaItem)){
                         MediaItemCellView(movie: mediaItem)
                             .frame(width: 200)
                             .onAppear {

@@ -24,6 +24,8 @@ enum MoviesApi {
     case fetchCompanyDetail(req: FetchCastMemberDetailRequest)
     case fetchSimilarMovies(req: FetchSimilarMovie)
     case fetchCombinedCredits(req: FetchCastMemberDetailRequest)
+    case fetchRandomMovies(req: FetchRandomMediaItems)
+    case fetchRandomTvShows(req: FetchRandomMediaItems)
 }
 
 extension MoviesApi: TargetType {
@@ -41,9 +43,9 @@ extension MoviesApi: TargetType {
             return "genre/movie/list"
         case .fetchTVGenres:
             return "genre/tv/list"
-        case .fetchMovies:
+        case .fetchMovies, .fetchRandomMovies:
             return "discover/movie"
-        case .fetchTVShows:
+        case .fetchTVShows, .fetchRandomTvShows:
             return "discover/tv"
         case .searchMovies:
             return "search/movie"
@@ -72,7 +74,7 @@ extension MoviesApi: TargetType {
     
     var method: Moya.Method {
         switch self {
-        case .fetchGenres, .fetchTVGenres, .fetchMovies, .searchMovies, .fetchTVShows, .fetchFavoriteMovies, .fetchMovieDetail, .fetchMovieCredits, .fetchCastMemberDetail, .fetchCompanyDetail, .fetchSimilarMovies, .fetchTVDetail, .fetchCombinedCredits:
+        case .fetchGenres, .fetchTVGenres, .fetchMovies, .searchMovies, .fetchTVShows, .fetchFavoriteMovies, .fetchMovieDetail, .fetchMovieCredits, .fetchCastMemberDetail, .fetchCompanyDetail, .fetchSimilarMovies, .fetchTVDetail, .fetchCombinedCredits, .fetchRandomMovies, .fetchRandomTvShows:
             return .get
         case .editFavoriteMovie, .addReview :
             return .post
@@ -115,6 +117,10 @@ extension MoviesApi: TargetType {
             return .requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
         case .fetchCombinedCredits(req: let req):
             return .requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
+        case .fetchRandomMovies(req: let req):
+            return .requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
+        case .fetchRandomTvShows(req: let req):
+            return .requestParameters(parameters: req.asRequestParams(), encoding: URLEncoding.queryString)
         }
     }
     
@@ -155,6 +161,10 @@ extension MoviesApi: TargetType {
         case .fetchTVDetail(req: let req):
             return ["Authorization": req.accessToken]
         case .fetchCombinedCredits(req: let req):
+            return ["Authorization": req.accessToken]
+        case .fetchRandomMovies(req: let req):
+            return ["Authorization": req.accessToken]
+        case .fetchRandomTvShows(req: let req):
             return ["Authorization": req.accessToken]
         }
     }

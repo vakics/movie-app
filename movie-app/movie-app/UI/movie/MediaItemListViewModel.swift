@@ -22,7 +22,7 @@ class MediaItemListViewModel: MediaItemListViewModelProtocol, ErrorPrentable {
     @Published var isLoading: Bool = false
     
     let genreIdSubject = PassthroughSubject<Int, Never>()
-    let typeSubject = PassthroughSubject<GenreType, Never>()
+    let typeSubject = PassthroughSubject<MediaItemType, Never>()
     let reachedBottomSubject = CurrentValueSubject<Void, Never>(())
     private var cancellables = Set<AnyCancellable>()
     init() {
@@ -50,6 +50,10 @@ class MediaItemListViewModel: MediaItemListViewModelProtocol, ErrorPrentable {
                     return self.repository.fetchMovies(req: request)
                 case .tvShow:
                     return self.repository.fetchTVShows(req: request)
+                case .unknown:
+                    return Just<MediaItemPage>(MediaItemPage())
+                        .setFailureType(to: MovieError.self)
+                        .eraseToAnyPublisher()
                 }
             }
             .delay(for: .seconds(2), scheduler: RunLoop.main)
