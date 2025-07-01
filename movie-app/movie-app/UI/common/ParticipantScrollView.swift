@@ -37,10 +37,12 @@ struct ParticipantScrollView: View {
                                 NavigationLink(destination: CastDetailView(castDetailType: .castMember(id: participant.id))) {
                                     ParticipantCell(imageUrl: participant.imageUrl, title: participant.name)
                                 }
+                                .buttonStyle(.plain)
                             case .company:
                                 NavigationLink(destination: CastDetailView(castDetailType: .company(id: participant.id))) {
                                     ParticipantCell(imageUrl: participant.imageUrl, title: participant.name)
                                 }
+                                .buttonStyle(.plain)
                             }
                         }
                         .offset(CGSize(width: LayoutConst.maxPadding, height: 0))

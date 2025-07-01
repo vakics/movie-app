@@ -72,7 +72,7 @@ struct DetailView: View {
                 
                 VStack{
                     HStack {
-                        Text("Similar").font(Fonts.title)
+                        Text("detail.similar".localized()).font(Fonts.title)
                             .foregroundStyle(.primary)
                         Spacer()
                     }

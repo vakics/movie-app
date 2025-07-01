@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct MainTab: View {
-    let options: [String] = ["Movies", "TV shows"]
+    let options: [String] = ["mainTab.movie", "mainTab.tv"]
     @ViewBuilder
     func declareDestination(item: String) -> some View {
         switch item {
-        case "Movies":
+        case "mainTab.movie":
             GenreSectionView(type: .movie)
-        case "TV shows":
+        case "mainTab.tv":
             GenreSectionView(type: .tvShow)
         default:
             EmptyView()
@@ -25,11 +25,11 @@ struct MainTab: View {
             List(options, id: \.self) { option in
                 ZStack {
                     NavigationLink(destination: declareDestination(item: option)) {
-                        Text(option)
+                        Text(option.localized())
                     }.opacity(0)
 
                 HStack {
-                    Text(option).font(Fonts.title)
+                    Text(option.localized()).font(Fonts.title)
                         .foregroundStyle(.primary)
                     Spacer()
                     Image(.rightArrow)

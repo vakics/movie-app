@@ -55,7 +55,7 @@ struct GenreSectionView: View {
                     
                 }
                 .listStyle(.plain)
-                .navigationTitle(type == .movie ? "Movie" : "Tv Show")
+                .navigationTitle(type == .movie ? "mainTab.movie".localized() : "mainTab.tv".localized())
                 .accessibilityLabel("genreSectionCollectionView")
                 
                 

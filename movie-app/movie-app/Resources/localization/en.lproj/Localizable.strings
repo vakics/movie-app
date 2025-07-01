@@ -6,6 +6,8 @@
   
 */
 "mainTab.title" = "Search for";
+"mainTab.movie" = "Movies";
+"mainTab.tv" = "TV shows";
 "genreSection.title" = "Movie app";
 "search.textfield.placeholder" = "Movies, Director, ";
 "search.empty.title" = "Kezdj el gépelni a kereséshez!";
@@ -24,6 +26,12 @@
 "detail.overview" = "Synopsis";
 "detail.publishers" = "Publishers and companies";
 "detail.cast" = "Cast";
+"detail.similar" = "Similar";
+"detail.birth" = "Birth year";
+"detail.city" = "City";
+"detail.bio" = "Bio";
+"detail.popularity" = "Popularity";
+"detail.casted" = "Casted in";
 "noInternet" = "No internet connection";
 "addReview.subTitle" = "Give it  a honest review";
 "addReview.buttonTitle" = "Send my review";
