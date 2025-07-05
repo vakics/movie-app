@@ -54,8 +54,11 @@ struct DetailView: View {
                         StyledButton(style: .outlined, title: "detail.rate.button".localized(), action: .simple)
                     }
                     
-                    Spacer()
-                    StyledButton(style: .filled, title: "detail.imdb.button".localized(), action: .link(mediaItemDetail.imdbURL))
+                    if let imdb = mediaItemDetail.imdbURL{
+                        Spacer()
+                        StyledButton(style: .filled, title: "detail.imdb.button".localized(), action: .link(imdb))
+                    }
+                    
                 }
                 
                 VStack(alignment: .leading, spacing: 12.0) {

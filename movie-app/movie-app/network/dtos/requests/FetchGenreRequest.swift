@@ -7,11 +7,11 @@
 import Foundation
 import Moya
 
-struct FetchGenreRequest {
+struct FetchGenreRequest: LocalizedRequestable {
     let accessToken: String = Config.bearerToken
     
-    func asRequestParams() -> [String: String] {
+    func asRequestParams() -> [String: Any] {
 //        dictionary
-        return [:]
+        return languageParam
     }
 }

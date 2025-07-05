@@ -8,7 +8,7 @@
 struct FetchRandomMediaItems: Encodable{
     let accessToken: String = Config.bearerToken
     
-    func asRequestParams() -> [String: Any] {
+    func asRequestParams() -> [String: String] {
         return [:]
     }
 }
