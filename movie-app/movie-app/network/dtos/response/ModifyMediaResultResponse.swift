@@ -6,7 +6,7 @@
 //
 
 
-struct ModifyMediaRequest : Decodable {
+struct ModifyMediaResultResponse : Decodable {
     let success : Bool
     let statusCode : Int
     let statusMessage : String

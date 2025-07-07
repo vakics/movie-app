@@ -20,7 +20,7 @@ protocol MovieRepository {
     func fetchMovieDetail(req: FetchDetailRequest) -> AnyPublisher<MediaItemDetail, MovieError>
     func fetchTVDetail(req: FetchDetailRequest) -> AnyPublisher<MediaItemDetail, MovieError>
     func fetchMovieCredits(req: FetchMovieCreditsRequest) -> AnyPublisher<[CastMember], MovieError>
-    func fetchFavoriteMovies(req: FetchFavoriteMovieRequest, fromLocal: Bool) -> AnyPublisher<[MediaItem], MovieError>
+    func fetchFavoriteMovies(req: FetchFavoriteMovieRequest) -> AnyPublisher<[MediaItem], MovieError>
     func editFavoriteMovie(req: EditFavoriteRequest) -> AnyPublisher<ModifyMediaResult, MovieError>
     func addReview(req: AddReviewRequest)->AnyPublisher<ModifyMediaResult, MovieError>
     func fetchCastMemberDetail(req: FetchCastMemberDetailRequest)->AnyPublisher<CastDetail, MovieError>
@@ -129,7 +129,7 @@ class MovieRepositoryImp: MovieRepository {
             .eraseToAnyPublisher()
     }
     
-    func fetchFavoriteMovies(req: FetchFavoriteMovieRequest, fromLocal: Bool = false) -> AnyPublisher<[MediaItem], MovieError> {
+    func fetchFavoriteMovies(req: FetchFavoriteMovieRequest) -> AnyPublisher<[MediaItem], MovieError> {
         let serviceResponse: AnyPublisher<[MediaItem], MovieError> = self.requestAndTransform(
             target: MultiTarget(MoviesApi.fetchFavoriteMovies(req: req)),
             decodeTo: MoviePageResponse.self,
@@ -156,7 +156,7 @@ class MovieRepositoryImp: MovieRepository {
     func editFavoriteMovie(req: EditFavoriteRequest) -> AnyPublisher<ModifyMediaResult, MovieError> {
         requestAndTransform(
             target: MultiTarget(MoviesApi.editFavoriteMovie(req: req)),
-            decodeTo: ModifyMediaRequest.self,
+            decodeTo: ModifyMediaResultResponse.self,
             transform: { response in
                 ModifyMediaResult(dto: response)
             }
@@ -166,7 +166,7 @@ class MovieRepositoryImp: MovieRepository {
     func addReview(req: AddReviewRequest) -> AnyPublisher<ModifyMediaResult, MovieError> {
         requestAndTransform(
             target: MultiTarget(MoviesApi.addReview(req: req)),
-            decodeTo: ModifyMediaRequest.self,
+            decodeTo: ModifyMediaResultResponse.self,
             transform: {response in
                 ModifyMediaResult(dto: response)
             })
@@ -189,9 +189,22 @@ class MovieRepositoryImp: MovieRepository {
     }
     
     func fetchSimilarMovies(req: FetchSimilarMovie) -> AnyPublisher<MediaItemPage, MovieError> {
-        requestAndTransform(target: MultiTarget(MoviesApi.fetchSimilarMovies(req: req)), decodeTo: MoviePageResponse.self, transform: {response in
-            MediaItemPage(dto: response)
-        })
+        
+        
+        return networkMonitor.isConnected
+            .flatMap { isConnected -> AnyPublisher<MediaItemPage, MovieError> in
+                if isConnected {
+                    return self.requestAndTransform(target: MultiTarget(MoviesApi.fetchSimilarMovies(req: req)), decodeTo: MoviePageResponse.self, transform: {response in
+                        MediaItemPage(dto: response)
+                    })
+                    
+                } else {
+                    return Just(MediaItemPage())
+                        .setFailureType(to: MovieError.self)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
     func fetchCombinedCredits(req: FetchCastMemberDetailRequest) -> AnyPublisher<[CombinedMediaItem], MovieError> {

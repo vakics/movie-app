@@ -17,9 +17,9 @@ struct RootView: View {
         ZStack(alignment: .top) {
             NavbarView(selectedTab: $selectedTab)
 
-            if !viewModel.isConnected {
-                OfflineBannerView()
-            }
+            OfflineBannerView()
+                .opacity(viewModel.isBannerVisible ? 1.0 : 0.0)
+                .animation(.easeOut(duration: 0.3), value: viewModel.isBannerVisible)
         }
     }
 }

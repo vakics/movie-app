@@ -62,7 +62,7 @@ struct SettingsView: View {
                 Spacer()
                 VStack(spacing: LayoutConst.smallPadding) {
                     Text("Version \(viewModel.appInfo)")
-                    Text("Created by Hell yeah")
+                    Text("Created by vakics")
                 }
                 .font(Fonts.subheading)
                 .frame(maxWidth: .infinity, alignment: .center)
