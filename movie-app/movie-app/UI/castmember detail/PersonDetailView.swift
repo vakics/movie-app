@@ -39,7 +39,7 @@ struct CastDetailView: View {
                             
                             HStack(spacing: 40) {
                                 VStack(alignment: .leading) {
-                                    Text("Birth year")
+                                    Text("detail.birth".localized())
                                         .font(Fonts.caption)
                                         .foregroundColor(Color.primary)
                                     Text(castDetail.birthYear?.split(separator: "-").first.map(String.init) ?? "N/A")
@@ -48,7 +48,7 @@ struct CastDetailView: View {
                                 }
                                 
                                 VStack(alignment: .leading) {
-                                    Text("City")
+                                    Text("detail.city".localized())
                                         .font(Fonts.caption)
                                         .foregroundColor(Color.primary)
                                     Text(castDetail.originPlace ?? "")
@@ -60,7 +60,7 @@ struct CastDetailView: View {
                             .padding(.horizontal)
                             
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("Bio")
+                                Text("detail.bio".localized())
                                     .font(Fonts.caption)
                                     .foregroundColor(Color.primary)
                                 Text(castDetail.biography)
@@ -70,19 +70,20 @@ struct CastDetailView: View {
                             .padding(.horizontal)
                             
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("Popularity")
+                                Text("detail.popularity".localized())
                                     .font(Fonts.caption)
                                     .foregroundColor(Color.primary)
                                 HStack {
                                     Spacer()
                                     StarRatingView(rating: $viewModel.rating, starSize: 24)
+                                        .allowsHitTesting(false)
                                     Spacer()
                                 }
                             }
                             .padding(.horizontal)
                             
                             if viewModel.credits.count != 0{
-                                Text("Casted in")
+                                Text("detail.casted".localized())
                                     .font(Fonts.title)
                                     .padding(.horizontal)
                                 CreditsScrollView(mediaItems: viewModel.credits)

@@ -15,14 +15,19 @@ class RootViewModel: ObservableObject {
     @Inject
     private var networkMonitor: NetworkMonitorProtocol
     
-    @Published var isConnected: Bool = true
+    @Published var isBannerVisible: Bool = false
     private var cancellables = Set<AnyCancellable>()
     
     init() {
         networkMonitor.isConnected
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self]isConnected in
-                self?.isConnected = isConnected
+                if !isConnected{
+                    self?.isBannerVisible = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+                        self?.isBannerVisible = false
+                    }
+                }
             })
             .store(in: &cancellables)
     }

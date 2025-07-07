@@ -6,6 +6,8 @@
   
 */
 "mainTab.title" = "Szűrés";
+"mainTab.movie" = "Filmek";
+"mainTab.tv" = "Sorozatok";
 "genreList.title" = "Filmek alkalmazás";
 "search.textfield.placeholder" = "Filmek, rendező, ";
 "search.empty.title" = "Kezdj el gépelni a kereséshez!";
@@ -24,6 +26,12 @@
 "detail.overview" = "Összefoglaló";
 "detail.publishers" = "Kiadók és cégek";
 "detail.cast" = "Színészek";
+"detail.similar" = "Hasonlók";
+"detail.birth" = "Születési év";
+"detail.city" = "Város";
+"detail.bio" = "Leírás";
+"detail.popularity" = "Népszerűség";
+"detail.casted" = "Szereplések";
 "noInternet" = "Nincs internet";
 "addReview.subTitle" = "Hány csillagra értékelnéd?";
 "addReview.buttonTitle" = "Küldd el az értékelésem";

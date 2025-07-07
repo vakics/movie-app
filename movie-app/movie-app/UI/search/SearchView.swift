@@ -55,8 +55,11 @@ struct SearchView: View {
                     ScrollView {
                         VStack(spacing: 16) {
                             ForEach(viewModel.movies) { movie in
-                                MediaItemCellView(movie: movie)
-                                    .frame(height: 277)
+                                NavigationLink(destination: DetailView(mediaItem: movie)){
+                                    MediaItemCellView(movie: movie)
+                                        .frame(height: 277)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                         .padding(.horizontal, 16)

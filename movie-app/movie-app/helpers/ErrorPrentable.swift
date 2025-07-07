@@ -19,6 +19,12 @@ extension ErrorPrentable {
             return AlertModel(title: "error.api.title", message: message, dismissButtonTitle: "error.close")
         case .clientError:
             return AlertModel(title: "Client error", message: error.localizedDescription, dismissButtonTitle: "error.close")
+        case .mappingError(let message):
+                    return AlertModel(
+                        title: "mappingerror.error.title".localized(),
+                        message: message,
+                        dismissButtonTitle: "button.close.text".localized()
+                    )
         case .noInternetError:
             return nil
         case .serverError:

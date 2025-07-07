@@ -27,7 +27,8 @@ extension MediaItemEntity {
             duration: duration,
             imageUrl: imageUrlString.flatMap(URL.init(string:)),
             rating: rating,
-            voteCount: voteCount
+            voteCount: voteCount,
+            showType: .movie
         )
     }
 

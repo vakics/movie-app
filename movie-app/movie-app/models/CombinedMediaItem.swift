@@ -8,10 +8,10 @@
 struct CombinedMediaItem{
     let mediaItem: MediaItem
     let originalTitle: String
-    let showType: GenreType
+    let showType: MediaItemType
     let character: String
     
-    init(mediaItem: MediaItem, originalTitle: String, showType: GenreType, character: String) {
+    init(mediaItem: MediaItem, originalTitle: String, showType: MediaItemType, character: String) {
         self.mediaItem = mediaItem
         self.originalTitle = originalTitle
         self.showType = showType

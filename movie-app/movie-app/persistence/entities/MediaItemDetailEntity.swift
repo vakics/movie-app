@@ -57,7 +57,8 @@ class MediaItemDetailEntity: Object {
             genres: Array(genres),
             spokenLanguages: spokenLanguages,
             imdbURL: imdbURL.flatMap(URL.init),
-            productionCompanies: productionCompanies.map { $0.toDomain }
+            productionCompanies: productionCompanies.map { $0.toDomain },
+            showType: .movie
         )
     }
 }

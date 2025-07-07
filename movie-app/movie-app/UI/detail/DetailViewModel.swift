@@ -20,10 +20,10 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
     @Published var isLoading: Bool = true
     var pageNumber: Int = 1
     
-    let mediaItemIdSubject = CurrentValueSubject<Int?, Never>(nil)
+    let mediaItemSubject = PassthroughSubject<MediaItem, Never>()
     let favoriteButtonTapped = PassthroughSubject<Void, Never>()
     let reachedEndSubject = PassthroughSubject<Void, Never>()
-    let typeSubject = CurrentValueSubject<GenreType, Never>(.movie)
+    let typeSubject = CurrentValueSubject<MediaItemType, Never>(.movie)
     
     @Inject
     private var repository: MovieRepository
@@ -34,62 +34,83 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        reachedEndSubject
-            .sink { _ in
-        } receiveValue: { _ in
-            self.isLoading = true
-            self.pageNumber = self.pageNumber + 1
-            self.mediaItemIdSubject.send(self.mediaItemDetail.id)
-        }.store(in: &cancellables)
+        let initialLoad = mediaItemSubject
+            .flatMap { [weak self] mediaItem -> AnyPublisher<(MediaItemDetail, [CastMember], [MediaItem]), MovieError> in
+                guard let self = self else {
+                    return Fail(error: .unexpectedError)
+                        .eraseToAnyPublisher()
+                }
 
-        
-        let details = mediaItemIdSubject
-            .compactMap { $0 }
-            .flatMap { [weak self]mediaItemId in
-                guard let self = self else {
-                    preconditionFailure("There is no self")
-                }
-                let request = FetchDetailRequest(mediaId: mediaItemId)
-                return typeSubject.value == .movie ? self.repository.fetchMovieDetail(req: request):self.repository.fetchTVDetail(req: request)
+                let request = FetchDetailRequest(mediaId: mediaItem.id)
+
+                let detailPublisher: AnyPublisher<MediaItemDetail, MovieError> = {
+                    switch mediaItem.showType {
+                    case .movie:
+                        return self.repository.fetchMovieDetail(req: request)
+                    case .tvShow:
+                        return self.repository.fetchTVDetail(req: request)
+                    case .unknown:
+                        return Just(MediaItemDetail())
+                            .setFailureType(to: MovieError.self)
+                            .eraseToAnyPublisher()
+                    }
+                }()
+
+                let creditsPublisher: AnyPublisher<[CastMember], MovieError> = {
+                    if mediaItem.showType == .movie {
+                        let creditsRequest = FetchMovieCreditsRequest(mediaId: mediaItem.id)
+                        return self.repository.fetchMovieCredits(req: creditsRequest)
+                    }
+                    return Just([])
+                        .setFailureType(to: MovieError.self)
+                        .eraseToAnyPublisher()
+                }()
+
+                let similarPublisher = self.fetchSimilarMovies(for: mediaItem, page: 1)
+
+                return Publishers.CombineLatest3(detailPublisher, creditsPublisher, similarPublisher)
+                    .eraseToAnyPublisher()
             }
-        
-        let credits = mediaItemIdSubject
-            .compactMap { $0 }
-            .flatMap { [weak self]mediaItemId in
-                guard let self = self else {
-                    preconditionFailure("There is no self")
-                }
-                let request = FetchMovieCreditsRequest(mediaId: mediaItemId)
-                return self.repository.fetchMovieCredits(req: request)
-            }
-        let similars = mediaItemIdSubject
-            .compactMap { $0 }
-            .flatMap { [weak self] mediaItemId in
-                guard let self = self else {
-                    preconditionFailure("There is no self")
-                }
-                let request = FetchSimilarMovie(movieId: mediaItemId, pageNumber: pageNumber)
-                return self.repository.fetchSimilarMovies(req: request)
-            }
-        
-        Publishers.CombineLatest3(details, credits, similars)
+        initialLoad
             .receive(on: RunLoop.main)
-            .sink { [weak self] completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
                     self?.alertModel = self?.toAlertModel(error)
                     self?.isLoading = false
                 }
-            } receiveValue: { [weak self] details, credits, similars in
-                guard let self = self else {
-                    preconditionFailure("There is no self")
-                }
-                print("<<<DEBUG - Loaded detail id: \(details.id)")
-                self.mediaItemDetail = details
+            }, receiveValue: { [weak self] detail, credits, similars in
+                guard let self = self else { return }
+                self.mediaItemDetail = detail
                 self.credits = credits
-                self.similarItems.append(contentsOf: similars.mediaItems)
-                self.isFavorite = self.mediaItemStore.isMediaItemStored(withId: details.id)
+                self.similarItems = similars
+                self.isFavorite = self.mediaItemStore.isMediaItemStored(withId: detail.id)
+                self.pageNumber += 1
                 self.isLoading = false
+            })
+            .store(in: &cancellables)
+        reachedEndSubject
+            .flatMap { [weak self] mediaItem -> AnyPublisher<[MediaItem], MovieError> in
+                guard let self = self else {
+                    return Fail(error: .unexpectedError).eraseToAnyPublisher()
+                }
+                self.isLoading = true
+                return self.fetchSimilarMovies(for: MediaItem(detail: mediaItemDetail), page: self.pageNumber)
             }
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.alertModel = self?.toAlertModel(error)
+                    self?.isLoading = false
+                }
+            }, receiveValue: { [weak self] newItems in
+                guard let self = self else { return }
+
+                if !newItems.isEmpty {
+                    self.similarItems.append(contentsOf: newItems)
+                    self.pageNumber += 1
+                }
+                self.isLoading = false
+            })
             .store(in: &cancellables)
         
         favoriteButtonTapped
@@ -124,5 +145,16 @@ class DetailViewModel: DetailViewModelProtocol, ErrorPrentable {
             }
             .store(in: &cancellables)
     }
-    
+    private func fetchSimilarMovies(for mediaItem: MediaItem, page: Int) -> AnyPublisher<[MediaItem], MovieError> {
+        guard mediaItem.showType == .movie else {
+            return Just([])
+                .setFailureType(to: MovieError.self)
+                .eraseToAnyPublisher()
+        }
+
+        let request = FetchSimilarMovie(movieId: mediaItem.id, pageNumber: page)
+        return repository.fetchSimilarMovies(req: request)
+            .map { $0.mediaItems }
+            .eraseToAnyPublisher()
+    }
 }

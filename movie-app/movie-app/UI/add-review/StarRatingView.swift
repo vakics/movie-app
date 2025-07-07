@@ -11,7 +11,6 @@ import SwiftUI
 struct StarRatingView: View {
     @Binding var rating: Int
     var starSize: CGFloat = 40.0
-    var onTap: ((Int)->Void)?
     
     var body: some View {
         HStack(spacing: 12) {
@@ -20,7 +19,7 @@ struct StarRatingView: View {
                          isFilled: index <= rating,
                          size: starSize,
                          onTap: {
-                    onTap?(index)
+                    rating = index
                 })
             }
         }

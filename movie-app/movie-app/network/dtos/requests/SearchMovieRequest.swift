@@ -5,11 +5,11 @@
 //  Created by Panna Krisztina Pazonyi on 2025. 04. 17..
 //
 
-struct SearchMoviesRequest {
+struct SearchMoviesRequest: LocalizedRequestable {
     let accessToken: String = Config.bearerToken
     let query: String
     
     func asRequestParams() -> [String: Any] {
-        return ["query": query]
+        return ["query": query] + languageParam
     }
 }

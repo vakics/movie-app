@@ -5,7 +5,8 @@
 //  Created by Panna Krisztina Pazonyi on 2025. 04. 15..
 //
 
-enum GenreType{
+enum MediaItemType{
     case movie
     case tvShow
+    case unknown
 }

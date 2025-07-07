@@ -60,5 +60,8 @@ class ServiceAssembly: Assembly{
         container.register(GenreSectionUseCase.self) { _ in
             return GenreSectionUseCaseImp()
         }.inObjectScope(.container)
+        container.register(AppVersionProviderProtocol.self) { _ in
+            return AppVersionProvider()
+        }.inObjectScope(.container)
     }
 }

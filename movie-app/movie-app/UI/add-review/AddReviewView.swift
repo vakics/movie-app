@@ -11,7 +11,7 @@ import SwiftUI
 struct AddReviewView: View {
     
     let mediaItemDetail: MediaItemDetail
-    
+    @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel = AddReviewViewModel()
     
     var body: some View {
@@ -42,8 +42,12 @@ struct AddReviewView: View {
         }
         .scrollIndicators(.hidden)
         .padding(.horizontal, LayoutConst.maxPadding)
+        .showAlert(model: $viewModel.alertModel)
         .onAppear {
             viewModel.mediaDetailSubject.send(mediaItemDetail)
+        }
+        .onChange(of: viewModel.success) {
+            dismiss()
         }
     }
 }

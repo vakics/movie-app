@@ -22,6 +22,7 @@ struct MediaItemDetail: Identifiable {
     let spokenLanguages: String
     let imdbURL: URL?
     let productionCompanies: [ProductionCompany]
+    let showType: MediaItemType
     
     init(id: Int = 0) {
         self.id = id
@@ -38,6 +39,39 @@ struct MediaItemDetail: Identifiable {
         self.spokenLanguages = ""
         self.imdbURL = URL(string: "")
         self.productionCompanies = []
+        self.showType = .unknown
+    }
+    
+    init(id: Int, title: String,
+         year: String,
+         runtime: Int,
+         imageUrl: URL?,
+         rating: Double,
+         voteCount: Int,
+         overview: String = "",
+         popularity: Double = 0,
+         adult: Bool = false,
+         genres: [String] = [],
+         spokenLanguages: String = "",
+         imdbURL: URL? = URL(string: ""),
+         productionCompanies: [ProductionCompany] = [],
+         showType: MediaItemType
+    ) {
+        self.id = id
+        self.title = title
+        self.year = year
+        self.runtime = runtime
+        self.imageUrl = imageUrl
+        self.rating = rating
+        self.voteCount = voteCount
+        self.overview = overview
+        self.popularity = popularity
+        self.adult = adult
+        self.genres = genres
+        self.spokenLanguages = spokenLanguages
+        self.imdbURL = imdbURL
+        self.productionCompanies = productionCompanies
+        self.showType = showType
     }
     
     init(id: Int, title: String,
@@ -68,6 +102,7 @@ struct MediaItemDetail: Identifiable {
         self.spokenLanguages = spokenLanguages
         self.imdbURL = imdbURL
         self.productionCompanies = productionCompanies
+        self.showType = .unknown
     }
     
     init(dto: MovieDetailResponse) {
@@ -98,10 +133,11 @@ struct MediaItemDetail: Identifiable {
             .joined(separator: ", ")
         self.productionCompanies = dto.productionCompanies
             .map({ ProductionCompany(dto: $0)})
+        self.showType = .movie
     }
     
     init(dto: TVDetailResponse){
-        let releaseDate: String? = dto.releaseDate
+        let releaseDate: String? = dto.firstAirDate
         let prefixedYear: Substring = releaseDate?.prefix(4) ?? "-"
         let year = String(prefixedYear)
         
@@ -112,22 +148,23 @@ struct MediaItemDetail: Identifiable {
         }
         
         self.id = dto.id
-        self.title = dto.title
+        self.title = dto.name
         self.year = year
-        self.runtime = dto.runtime
+        self.runtime = dto.episodeRunTime.first ?? 0
         self.imageUrl = imageUrl
         self.rating = dto.voteAverage ?? 0.0
         self.voteCount = dto.voteCount ?? 0
         self.overview = dto.overview
         self.popularity = dto.popularity
         self.adult = dto.adult
-        self.imdbURL = URL(string: "https://www.imdb.com/title/\(dto.imdbId)/")
+        self.imdbURL = dto.homepage.flatMap { URL(string: $0) }
         self.genres = dto.genres.map({ $0.name })
         self.spokenLanguages = dto.spokenLanguages
             .map({ $0.englishName })
             .joined(separator: ", ")
         self.productionCompanies = dto.productionCompanies
             .map({ ProductionCompany(dto: $0)})
+        self.showType = .tvShow
     }
     
     var genreList: String {

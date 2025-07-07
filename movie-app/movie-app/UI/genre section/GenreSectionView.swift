@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GenreSectionView: View {
-    var type: GenreType
+    var type: MediaItemType
     @StateObject private var viewModel  = GenreSectionViewModelImp()
     
     var body: some View {
@@ -29,7 +29,7 @@ struct GenreSectionView: View {
                             .listStyle(.plain)
                     }
                     if let motd = viewModel.motdMovie {
-                        NavigationLink(destination: DetailView(mediaItem: MediaItem(detail: motd), type: .movie)){
+                        NavigationLink(destination: DetailView(mediaItem: MediaItem(detail: motd))){
                             GenreMotdCell(mediaItem: motd)
                                 .background(Color.clear)
                                 .listStyle(.plain)
@@ -41,7 +41,7 @@ struct GenreSectionView: View {
                                 EmptyView()
                             }.opacity(0)
                             let mediaItems = viewModel.getMediaItemsByGenre(genre.id)
-                            MediaItemListByGenre(genre: genre, mediaItems: mediaItems, type: type)
+                            MediaItemListByGenre(genre: genre, mediaItems: mediaItems)
                                 .onAppear{
                                     if viewModel.mediaItemsByGenre[genre.id] == nil{
                                         viewModel.loadMediaItems(genreId: genre.id, typeSubject: viewModel.typeSubject)
@@ -55,7 +55,7 @@ struct GenreSectionView: View {
                     
                 }
                 .listStyle(.plain)
-                .navigationTitle(type == .movie ? "Movie" : "Tv Show")
+                .navigationTitle(type == .movie ? "mainTab.movie".localized() : "mainTab.tv".localized())
                 .accessibilityLabel("genreSectionCollectionView")
                 
                 
@@ -65,7 +65,7 @@ struct GenreSectionView: View {
                 viewModel.typeSubject.send(type)
                 viewModel.loadGenres()
                 viewModel.genreAppeared()
-                
+                viewModel.loadMotdMovie()
             }
             .showAlert(model: $viewModel.alertModel)
 //        }

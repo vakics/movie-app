@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import InjectPropertyWrapper
 
 protocol SettingViewModelProtocol: ObservableObject{
     
@@ -22,10 +23,15 @@ class SettingViewModel: SettingViewModelProtocol {
     }
     
     @AppStorage("color-scheme") var colorSchemeRawValue: String = "light"
+    @Published var appInfo: String = ""
+    
+    @Inject
+    private var appVersionProvider: AppVersionProviderProtocol
     
     init() {
         let storedTheme = UserDefaults.standard.string(forKey: themeKey)
         self.selectedTheme = Theme(rawValue: storedTheme ?? "") ?? .light
+        appInfo = appVersionProvider.version + " (" + appVersionProvider.build + ")"
     }
     
     func changeSelectedLanguge(_ language: String) {

@@ -11,7 +11,6 @@ import SafariServices
 struct DetailView: View {
     @StateObject private var viewModel = DetailViewModel()
     let mediaItem: MediaItem
-    let type: GenreType
     @Environment(\.dismiss) private var dismiss: DismissAction
     
     var body: some View {
@@ -55,8 +54,11 @@ struct DetailView: View {
                         StyledButton(style: .outlined, title: "detail.rate.button".localized(), action: .simple)
                     }
                     
-                    Spacer()
-                    StyledButton(style: .filled, title: "detail.imdb.button".localized(), action: .link(mediaItemDetail.imdbURL))
+                    if let imdb = mediaItemDetail.imdbURL{
+                        Spacer()
+                        StyledButton(style: .filled, title: "detail.imdb.button".localized(), action: .link(imdb))
+                    }
+                    
                 }
                 
                 VStack(alignment: .leading, spacing: 12.0) {
@@ -73,11 +75,11 @@ struct DetailView: View {
                 
                 VStack{
                     HStack {
-                        Text("Similar").font(Fonts.title)
+                        Text("detail.similar".localized()).font(Fonts.title)
                             .foregroundStyle(.primary)
                         Spacer()
                     }
-                    MediaItemScrollView(mediaItems: viewModel.similarItems, isLoading: viewModel.isLoading, reachedEndSubject: viewModel.reachedEndSubject, type: type)
+                    MediaItemScrollView(mediaItems: viewModel.similarItems, isLoading: viewModel.isLoading, reachedEndSubject: viewModel.reachedEndSubject)
                 }
             }
             .padding(.horizontal, LayoutConst.maxPadding)
@@ -98,9 +100,7 @@ struct DetailView: View {
         }
         .showAlert(model: $viewModel.alertModel)
         .onAppear {
-            print("<<<DEBUG - onAppear with id: \(mediaItem.id)")
-            viewModel.mediaItemIdSubject.send(mediaItem.id)
-            viewModel.typeSubject.send(type)
+            viewModel.mediaItemSubject.send(mediaItem)
         }
     }
 }

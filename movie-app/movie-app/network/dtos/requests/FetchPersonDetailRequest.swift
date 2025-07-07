@@ -5,11 +5,11 @@
 //  Created by Panna Krisztina Pazonyi on 2025. 06. 14..
 //
 
-struct FetchCastMemberDetailRequest: Encodable{
+struct FetchCastMemberDetailRequest: Encodable, LocalizedRequestable{
     let accessToken: String = Config.bearerToken
     let memberId: Int
     
     func asRequestParams() -> [String: Any] {
-        return [:]
+        return languageParam
     }
 }

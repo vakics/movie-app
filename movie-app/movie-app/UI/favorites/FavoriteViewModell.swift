@@ -30,7 +30,7 @@ class FavoriteViewModell: FavoriteViewModellProtocol, ErrorPrentable{
                 guard let self = self else {
                     preconditionFailure("There is no self")
                 }
-                return self.service.fetchFavoriteMovies(req: FetchFavoriteMovieRequest(), fromLocal: false)
+                return self.service.fetchFavoriteMovies(req: FetchFavoriteMovieRequest())
             }
             .receive(on: RunLoop.main)
             .sink { completion in
