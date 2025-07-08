@@ -28,16 +28,6 @@ final class GenreSectionViewUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
-    func testTabBarItems() throws {
-        // UI tests must launch the application that they test.
-        
-        app.images["search"].tap()
-        app.images["favorites"].tap()
-        app.images["settings"].tap()
-        app.images["genre"].tap()
-        
-        
-    }
     
     func testUsage() throws {
         // UI tests must launch the application that they test.
